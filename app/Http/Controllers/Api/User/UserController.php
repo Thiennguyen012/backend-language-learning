@@ -10,6 +10,7 @@ use App\Traits\ValidatesRequestData;
 use App\CPU\Helpers;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\Http\JsonResponse;
 
 class UserController extends Controller
 {
@@ -24,81 +25,129 @@ class UserController extends Controller
     /**
      * Display a listing of users
      */
-    public function index(Request $request)
+    public function index(Request $request): JsonResponse
     {
-        $limit = $request->query('limit', Helpers::LIMIT_PER_PAGE);
+        $perPage = (int) $request->query('per_page', Helpers::LIMIT_PER_PAGE);
+        $perPage = $perPage > 0 ? min($perPage, Helpers::LIMIT_PER_PAGE) : Helpers::LIMIT_PER_PAGE;
         $search = $request->query('search', '');
 
-        $users = $this->userService->paginate($limit, $search);
+        $users = $this->userService->paginate($perPage, $search);
+        $users->getCollection()->load('roles');
+        $data = $users->getCollection()->map(function ($user) {
+            $payload = $user->toArray();
+            $payload['role_ids'] = $user->roles->pluck('id')->values()->all();
+            unset($payload['roles']);
 
-        return $this->successResponse($users, 'Lấy danh sách người dùng thành công');
+            return $payload;
+        });
+
+        return response()->json([
+            'status_code' => Response::HTTP_OK,
+            'message' => __('messages.user.list'),
+            'data' => $data,
+            'meta' => [
+                'current_page' => $users->currentPage(),
+                'last_page' => $users->lastPage(),
+                'per_page' => $users->perPage(),
+                'total' => $users->total(),
+            ],
+        ]);
     }
 
     /**
      * Store a newly created user
      */
-    public function store(StoreUserRequest $request)
+    public function store(StoreUserRequest $request): JsonResponse
     {
         try {
             $user = $this->userService->create($request->validated());
 
-            return $this->successResponse($user, 'Tạo người dùng thành công', Response::HTTP_CREATED);
+            return response()->json([
+                'status_code' => Response::HTTP_CREATED,
+                'message' => __('messages.user.created'),
+                'data' => $user,
+            ], Response::HTTP_CREATED);
         } catch (\Exception $e) {
-            return $this->handleException($e, 'Lỗi khi tạo người dùng');
+            return $this->handleException($e, __('messages.user.create_error'));
         }
     }
 
     /**
      * Display the specified user
      */
-    public function show(string $id)
+    public function show(string $id): JsonResponse
     {
         $user = $this->userService->find($id);
 
         if (!$user) {
-            return $this->errorResponse('User không tồn tại', Response::HTTP_NOT_FOUND);
+            return $this->errorResponse(__('messages.user.not_found'), Response::HTTP_NOT_FOUND);
         }
 
-        return $this->successResponse($user, 'Lấy thông tin người dùng thành công');
+        return response()->json([
+            'status_code' => Response::HTTP_OK,
+            'message' => __('messages.user.fetched'),
+            'data' => [
+                ...$user->toArray(),
+                'role_ids' => $user->roles()->pluck('roles.id')->values()->all(),
+            ],
+        ]);
     }
 
     /**
      * Update the specified user
      */
-    public function update(UpdateUserRequest $request, string $id)
+    public function update(UpdateUserRequest $request, string $id): JsonResponse
     {
         try {
             $user = $this->userService->find($id);
 
             if (!$user) {
-                return $this->errorResponse('User không tồn tại', Response::HTTP_NOT_FOUND);
+                return $this->errorResponse(__('messages.user.not_found'), Response::HTTP_NOT_FOUND);
             }
 
-            $updatedUser = $this->userService->update($user, $request->validated());
+            $data = $request->validated();
+            $roleIds = $data['role_ids'] ?? null;
+            unset($data['role_ids']);
 
-            return $this->successResponse($updatedUser, 'Cập nhật người dùng thành công');
+            $updatedUser = $this->userService->update($user, $data);
+
+            if (array_key_exists('role_ids', $request->validated())) {
+                $updatedUser->roles()->sync($roleIds ?? []);
+            }
+
+            return response()->json([
+                'status_code' => Response::HTTP_OK,
+                'message' => __('messages.user.updated'),
+                'data' => [
+                    ...$updatedUser->toArray(),
+                    'role_ids' => $updatedUser->roles()->pluck('roles.id')->values()->all(),
+                ],
+            ]);
         } catch (\Exception $e) {
-            return $this->handleException($e, 'Lỗi khi cập nhật người dùng');
+            return $this->handleException($e, __('messages.user.update_error'));
         }
     }
 
     /**
      * Remove the specified user
      */
-    public function destroy(string $id)
+    public function destroy(string $id): JsonResponse
     {
         try {
             $user = $this->userService->find($id);
 
             if (!$user) {
-                return $this->errorResponse('User không tồn tại', Response::HTTP_NOT_FOUND);
+                return $this->errorResponse(__('messages.user.not_found'), Response::HTTP_NOT_FOUND);
             }
 
             $this->userService->delete($user);
 
-            return $this->successResponse(null, 'Xóa người dùng thành công');
+            return response()->json([
+                'status_code' => Response::HTTP_OK,
+                'message' => __('messages.user_deleted'),
+            ]);
         } catch (\Exception $e) {
-            return $this->handleException($e, 'Lỗi khi xóa người dùng');
+            return $this->handleException($e, __('messages.user.delete_error'));
         }
     }
 }

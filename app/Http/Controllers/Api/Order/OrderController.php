@@ -78,7 +78,7 @@ class OrderController extends Controller
             $search = $request->query('search', '');
 
             // Get order IDs where user is owner using repository
-            $customerOrders = $this->customerOrderRepository->get([
+            $customerOrders = $this->customerOrderRepository->get([],[] ,[
                 'user_id' => $userId
             ]);
             
@@ -311,7 +311,7 @@ class OrderController extends Controller
                 $customerOrder = $this->customerOrderRepository->first([
                     'order_id' => $id,
                     'user_id' => $userId
-                ]);
+                ], []);
 
                 if (!$customerOrder) {
                     return $this->errorResponse('Bạn không có quyền sửa đơn hàng này', Response::HTTP_FORBIDDEN);

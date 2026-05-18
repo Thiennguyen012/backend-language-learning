@@ -33,6 +33,8 @@ class UpdateUserRequest extends FormRequest
             'avatar' => 'nullable|string',
             'status' => 'nullable|integer',
             'is_super_admin' => 'nullable|boolean',
+            'role_ids' => 'nullable|array',
+            'role_ids.*' => 'integer|exists:roles,id',
         ];
     }
 

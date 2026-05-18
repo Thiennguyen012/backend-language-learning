@@ -48,11 +48,23 @@ class AuthController extends Controller
     public function me(Request $request)
     {
         $user = $request->user();
+        $user->load('roles.permissions');
+        $permissions = $user->roles
+            ->flatMap(function ($role) {
+                return $role->permissions;
+            })
+            ->unique('id')
+            ->values();
+        $payload = $user->toArray();
+        unset($payload['roles']);
 
         return response()->json([
             'status_code' => Response::HTTP_OK,
             'message' => 'Get profile success',
-            'data' => $user
+            'data' => [
+                ...$payload,
+                'permissions' => $permissions,
+            ]
         ]);
     }
 

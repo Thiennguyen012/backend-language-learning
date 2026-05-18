@@ -1,6 +1,8 @@
 <?php
 
 use App\Http\Controllers\Api\AuthController;
+use App\Http\Controllers\Api\Permission\PermissionController;
+use App\Http\Controllers\Api\Role\RoleController;
 use App\Http\Controllers\Api\User\UserController;
 use App\Http\Controllers\Api\Order\OrderController;
 use Illuminate\Support\Facades\Route;
@@ -34,7 +36,25 @@ Route::prefix('admin')->group(function () {
             Route::delete('/{id}', [UserController::class, 'destroy']);
         });
     });
-    
+
+    Route::middleware('auth:sanctum')->group(function () {
+        Route::prefix('roles')->group(function () {
+            Route::get('/', [RoleController::class, 'index']);
+            Route::post('/', [RoleController::class, 'store']);
+            Route::get('/{role}', [RoleController::class, 'show']);
+            Route::put('/{role}', [RoleController::class, 'update']);
+            Route::delete('/{role}', [RoleController::class, 'destroy']);
+        });
+
+        Route::prefix('permissions')->group(function () {
+            Route::get('/', [PermissionController::class, 'index']);
+            Route::post('/', [PermissionController::class, 'store']);
+            Route::get('/{permission}', [PermissionController::class, 'show']);
+            Route::put('/{permission}', [PermissionController::class, 'update']);
+            Route::delete('/{permission}', [PermissionController::class, 'destroy']);
+        });
+    });
+
     Route::prefix('orders')->group(function () {
         Route::post('/decrypt', [OrderController::class, 'decryptPayload']);
 
