@@ -8,6 +8,10 @@ use App\Repositories\Order\OrderInterface;
 use App\Repositories\Order\OrderRepository;
 use App\Repositories\CustomerOrder\CustomerOrderInterface;
 use App\Repositories\CustomerOrder\CustomerOrderRepository;
+use App\Repositories\Flashcard\FlashcardInterface;
+use App\Repositories\Flashcard\FlashcardRepository;
+use App\Repositories\FlashcardCollection\FlashcardCollectionInterface;
+use App\Repositories\FlashcardCollection\FlashcardCollectionRepository;
 use App\Services\Order\OrderService;
 use App\Services\CustomerOrderService\CustomerOrderService;
 use Illuminate\Support\ServiceProvider;
@@ -22,6 +26,8 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind(UserInterface::class, UserRepository::class);
         $this->app->bind(OrderInterface::class, OrderRepository::class);
         $this->app->bind(CustomerOrderInterface::class, CustomerOrderRepository::class);
+        $this->app->bind(FlashcardInterface::class, FlashcardRepository::class);
+        $this->app->bind(FlashcardCollectionInterface::class, FlashcardCollectionRepository::class);
 
         // Service bindings
         $this->app->bind(CustomerOrderService::class, function ($app) {

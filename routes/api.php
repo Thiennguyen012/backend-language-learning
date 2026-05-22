@@ -5,6 +5,8 @@ use App\Http\Controllers\Api\Permission\PermissionController;
 use App\Http\Controllers\Api\Role\RoleController;
 use App\Http\Controllers\Api\User\UserController;
 use App\Http\Controllers\Api\Order\OrderController;
+use App\Http\Controllers\Api\Flashcard\FlashcardController;
+use App\Http\Controllers\Api\FlashcardCollection\FlashcardCollectionController;
 use Illuminate\Support\Facades\Route;
 
 // Test CORS endpoint
@@ -52,6 +54,23 @@ Route::prefix('admin')->group(function () {
             Route::get('/{permission}', [PermissionController::class, 'show']);
             Route::put('/{permission}', [PermissionController::class, 'update']);
             Route::delete('/{permission}', [PermissionController::class, 'destroy']);
+        });
+
+        Route::prefix('flashcards')->group(function () {
+            Route::post('/', [FlashcardController::class, 'store']);
+            Route::get('/{id}', [FlashcardController::class, 'show']);
+            Route::put('/{id}', [FlashcardController::class, 'update']);
+            Route::delete('/{id}', [FlashcardController::class, 'destroy']);
+        });
+
+        Route::prefix('flashcard-collections')->group(function () {
+            Route::get('/', [FlashcardCollectionController::class, 'index']);
+            Route::post('/', [FlashcardCollectionController::class, 'store']);
+            Route::get('/{id}', [FlashcardCollectionController::class, 'show']);
+            Route::put('/{id}', [FlashcardCollectionController::class, 'update']);
+            Route::delete('/{id}', [FlashcardCollectionController::class, 'destroy']);
+            Route::post('/{id}/attach', [FlashcardCollectionController::class, 'attach']);
+            Route::post('/{id}/detach', [FlashcardCollectionController::class, 'detach']);
         });
     });
 

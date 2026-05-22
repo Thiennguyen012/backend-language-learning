@@ -16,6 +16,9 @@ class DatabaseSeeder extends Seeder
     {
         $this->call([
             UserSeeder::class,
+            WordTypeSeeder::class,
+            FlashcardSeeder::class,
+            FlashcardCollectionSeeder::class,
         ]);
     }
 }
