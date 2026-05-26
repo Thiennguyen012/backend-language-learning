@@ -20,6 +20,7 @@ class DatabaseSeeder extends Seeder
             FlashcardSeeder::class,
             FlashcardCollectionSeeder::class,
             QuestionTypeSeeder::class,
+            QuestionSeeder::class,
         ]);
     }
 }
