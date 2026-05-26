@@ -42,6 +42,16 @@ return [
             'finished_at' => 'Thời gian kết thúc',
             'question_ids' => 'Danh sách câu hỏi',
         ],
+        'user_test_attempt' => [
+            'user_id' => 'Người dùng',
+            'collection_test_id' => 'Bài test',
+            'status' => 'Trạng thái',
+            'correct_count' => 'Số câu đúng',
+            'total_score' => 'Tổng điểm',
+            'started_time' => 'Thời gian bắt đầu',
+            'finished_time' => 'Thời gian kết thúc',
+            'total_time' => 'Tổng thời gian',
+        ],
         'test_type' => [
             'test_type' => 'Loại bài test',
         ],

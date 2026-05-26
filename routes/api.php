@@ -8,6 +8,7 @@ use App\Http\Controllers\Api\Order\OrderController;
 use App\Http\Controllers\Api\Flashcard\FlashcardController;
 use App\Http\Controllers\Api\FlashcardCollection\FlashcardCollectionController;
 use App\Http\Controllers\Api\CollectionTest\CollectionTestController;
+use App\Http\Controllers\Api\UserTestAttempt\UserTestAttemptController;
 use App\Http\Controllers\Api\TestType\TestTypeController;
 use App\Http\Controllers\Api\Question\QuestionController;
 use Illuminate\Support\Facades\Route;
@@ -82,6 +83,14 @@ Route::prefix('admin')->group(function () {
             Route::get('/{id}', [CollectionTestController::class, 'show']);
             Route::put('/{id}', [CollectionTestController::class, 'update']);
             Route::delete('/{id}', [CollectionTestController::class, 'destroy']);
+        });
+
+        Route::prefix('user-test-attempts')->group(function () {
+            Route::get('/', [UserTestAttemptController::class, 'index']);
+            Route::post('/', [UserTestAttemptController::class, 'store']);
+            Route::get('/{id}', [UserTestAttemptController::class, 'show']);
+            Route::put('/{id}', [UserTestAttemptController::class, 'update']);
+            Route::delete('/{id}', [UserTestAttemptController::class, 'destroy']);
         });
 
         Route::prefix('test-types')->group(function () {

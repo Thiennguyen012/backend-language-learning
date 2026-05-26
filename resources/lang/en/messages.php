@@ -7,6 +7,7 @@ return [
         'flashcard' => 'Flashcard',
         'flashcard_collection' => 'Flashcard collection',
         'collection_test' => 'Test',
+        'user_test_attempt' => 'User test attempt',
         'test_type' => 'Test type',
         'question' => 'Question',
         'original_word' => 'Original word',

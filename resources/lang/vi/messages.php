@@ -7,6 +7,7 @@ return [
         'flashcard' => 'Flashcard',
         'flashcard_collection' => 'Bộ flashcard',
         'collection_test' => 'Bài test',
+        'user_test_attempt' => 'Lượt làm bài',
         'test_type' => 'Loại bài test',
         'question' => 'Câu hỏi',
         'original_word' => 'Từ gốc',

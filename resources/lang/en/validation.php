@@ -42,6 +42,16 @@ return [
             'finished_at' => 'Finish time',
             'question_ids' => 'Question list',
         ],
+        'user_test_attempt' => [
+            'user_id' => 'User',
+            'collection_test_id' => 'Collection test',
+            'status' => 'Status',
+            'correct_count' => 'Correct count',
+            'total_score' => 'Total score',
+            'started_time' => 'Start time',
+            'finished_time' => 'Finish time',
+            'total_time' => 'Total time',
+        ],
         'test_type' => [
             'test_type' => 'Test type',
         ],

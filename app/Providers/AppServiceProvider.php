@@ -18,6 +18,8 @@ use App\Repositories\TestType\TestTypeInterface;
 use App\Repositories\TestType\TestTypeRepository;
 use App\Repositories\Question\QuestionInterface;
 use App\Repositories\Question\QuestionRepository;
+use App\Repositories\UserTestAttempt\UserTestAttemptInterface;
+use App\Repositories\UserTestAttempt\UserTestAttemptRepository;
 use App\Services\Order\OrderService;
 use App\Services\CustomerOrderService\CustomerOrderService;
 use Illuminate\Support\ServiceProvider;
@@ -37,6 +39,7 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind(CollectionTestInterface::class, CollectionTestRepository::class);
         $this->app->bind(TestTypeInterface::class, TestTypeRepository::class);
         $this->app->bind(QuestionInterface::class, QuestionRepository::class);
+        $this->app->bind(UserTestAttemptInterface::class, UserTestAttemptRepository::class);
 
         // Service bindings
         $this->app->bind(CustomerOrderService::class, function ($app) {
