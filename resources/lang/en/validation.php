@@ -22,6 +22,7 @@ return [
     ],
     'attributes' => [
         'flashcard_ids' => 'Flashcard list',
+        'question_ids' => 'Question list',
         'flashcard' => [
             'original_word' => 'Original word',
             'translated_word' => 'Translated word',
@@ -30,6 +31,16 @@ return [
         'flashcard_collection' => [
             'collection_name' => 'Collection name',
             'description' => 'Description',
+        ],
+        'collection_test' => [
+            'test_type_id' => 'Test type',
+            'collection_id' => 'Flashcard collection',
+            'test_name' => 'Test name',
+            'total_questions' => 'Total questions',
+            'status' => 'Status',
+            'started_at' => 'Start time',
+            'finished_at' => 'Finish time',
+            'question_ids' => 'Question list',
         ],
         'test_type' => [
             'test_type' => 'Test type',

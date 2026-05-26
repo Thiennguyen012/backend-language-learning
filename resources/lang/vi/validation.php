@@ -22,6 +22,7 @@ return [
     ],
     'attributes' => [
         'flashcard_ids' => 'Danh sách flashcard',
+        'question_ids' => 'Danh sách câu hỏi',
         'flashcard' => [
             'original_word' => 'Từ gốc',
             'translated_word' => 'Bản dịch từ',
@@ -30,6 +31,16 @@ return [
         'flashcard_collection' => [
             'collection_name' => 'Ten Bộ',
             'description' => 'Mô tả',
+        ],
+        'collection_test' => [
+            'test_type_id' => 'Loại bài test',
+            'collection_id' => 'Bộ flashcard',
+            'test_name' => 'Tên bài test',
+            'total_questions' => 'Tổng số câu hỏi',
+            'status' => 'Trạng thái',
+            'started_at' => 'Thời gian bắt đầu',
+            'finished_at' => 'Thời gian kết thúc',
+            'question_ids' => 'Danh sách câu hỏi',
         ],
         'test_type' => [
             'test_type' => 'Loại bài test',

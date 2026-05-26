@@ -6,6 +6,7 @@ return [
         'user' => 'Người dùng',
         'flashcard' => 'Flashcard',
         'flashcard_collection' => 'Bộ flashcard',
+        'collection_test' => 'Bài test',
         'test_type' => 'Loại bài test',
         'question' => 'Câu hỏi',
         'original_word' => 'Từ gốc',

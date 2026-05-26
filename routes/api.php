@@ -7,6 +7,7 @@ use App\Http\Controllers\Api\User\UserController;
 use App\Http\Controllers\Api\Order\OrderController;
 use App\Http\Controllers\Api\Flashcard\FlashcardController;
 use App\Http\Controllers\Api\FlashcardCollection\FlashcardCollectionController;
+use App\Http\Controllers\Api\CollectionTest\CollectionTestController;
 use App\Http\Controllers\Api\TestType\TestTypeController;
 use App\Http\Controllers\Api\Question\QuestionController;
 use Illuminate\Support\Facades\Route;
@@ -73,6 +74,14 @@ Route::prefix('admin')->group(function () {
             Route::delete('/{id}', [FlashcardCollectionController::class, 'destroy']);
             Route::post('/{id}/attach', [FlashcardCollectionController::class, 'attach']);
             Route::post('/{id}/detach', [FlashcardCollectionController::class, 'detach']);
+        });
+
+        Route::prefix('collection-tests')->group(function () {
+            Route::get('/', [CollectionTestController::class, 'index']);
+            Route::post('/', [CollectionTestController::class, 'store']);
+            Route::get('/{id}', [CollectionTestController::class, 'show']);
+            Route::put('/{id}', [CollectionTestController::class, 'update']);
+            Route::delete('/{id}', [CollectionTestController::class, 'destroy']);
         });
 
         Route::prefix('test-types')->group(function () {
