@@ -37,7 +37,7 @@ class FlashcardCollectionController extends Controller
 
         return response()->json([
             'status_code' => Response::HTTP_OK,
-            'message' => __('messages.flashcard_collection.list'),
+            'message' => __('messages.common.list', ['entity' => __('messages.entities.flashcard_collection')]),
             'data' => $collections->items(),
             'meta' => [
                 'current_page' => $collections->currentPage(),
@@ -58,11 +58,11 @@ class FlashcardCollectionController extends Controller
 
             return response()->json([
                 'status_code' => Response::HTTP_CREATED,
-                'message' => __('messages.flashcard_collection.created'),
+                'message' => __('messages.common.created', ['entity' => __('messages.entities.flashcard_collection')]),
                 'data' => $collection,
             ], Response::HTTP_CREATED);
         } catch (\Exception $e) {
-            return $this->handleException($e, __('messages.flashcard_collection.create_error'));
+            return $this->handleException($e, __('messages.common.create_error', ['entity' => __('messages.entities.flashcard_collection')]));
         }
     }
 
@@ -74,12 +74,15 @@ class FlashcardCollectionController extends Controller
         $collection = $this->flashcardCollectionService->find($id, ['flashcards']);
 
         if (!$collection) {
-            return $this->errorResponse(__('messages.flashcard_collection.not_found'), Response::HTTP_NOT_FOUND);
+            return $this->errorResponse(
+                __('messages.common.not_found', ['entity' => __('messages.entities.flashcard_collection')]),
+                Response::HTTP_NOT_FOUND
+            );
         }
 
         return response()->json([
             'status_code' => Response::HTTP_OK,
-            'message' => __('messages.flashcard_collection.fetched'),
+            'message' => __('messages.common.fetched', ['entity' => __('messages.entities.flashcard_collection')]),
             'data' => $collection,
         ]);
     }
@@ -93,18 +96,21 @@ class FlashcardCollectionController extends Controller
             $collection = $this->flashcardCollectionService->find($id);
 
             if (!$collection) {
-                return $this->errorResponse(__('messages.flashcard_collection.not_found'), Response::HTTP_NOT_FOUND);
+                return $this->errorResponse(
+                    __('messages.common.not_found', ['entity' => __('messages.entities.flashcard_collection')]),
+                    Response::HTTP_NOT_FOUND
+                );
             }
 
             $updatedCollection = $this->flashcardCollectionService->update($collection, $request->validated());
 
             return response()->json([
                 'status_code' => Response::HTTP_OK,
-                'message' => __('messages.flashcard_collection.updated'),
+                'message' => __('messages.common.updated', ['entity' => __('messages.entities.flashcard_collection')]),
                 'data' => $updatedCollection,
             ]);
         } catch (\Exception $e) {
-            return $this->handleException($e, __('messages.flashcard_collection.update_error'));
+            return $this->handleException($e, __('messages.common.update_error', ['entity' => __('messages.entities.flashcard_collection')]));
         }
     }
 
@@ -117,17 +123,20 @@ class FlashcardCollectionController extends Controller
             $collection = $this->flashcardCollectionService->find($id);
 
             if (!$collection) {
-                return $this->errorResponse(__('messages.flashcard_collection.not_found'), Response::HTTP_NOT_FOUND);
+                return $this->errorResponse(
+                    __('messages.common.not_found', ['entity' => __('messages.entities.flashcard_collection')]),
+                    Response::HTTP_NOT_FOUND
+                );
             }
 
             $this->flashcardCollectionService->delete($collection);
 
             return response()->json([
                 'status_code' => Response::HTTP_OK,
-                'message' => __('messages.flashcard_collection.deleted'),
+                'message' => __('messages.common.deleted', ['entity' => __('messages.entities.flashcard_collection')]),
             ]);
         } catch (\Exception $e) {
-            return $this->handleException($e, __('messages.flashcard_collection.delete_error'));
+            return $this->handleException($e, __('messages.common.delete_error', ['entity' => __('messages.entities.flashcard_collection')]));
         }
     }
 
@@ -145,14 +154,20 @@ class FlashcardCollectionController extends Controller
         $collection = FlashcardCollection::query()->find($id);
 
         if (!$collection) {
-            return $this->errorResponse(__('messages.flashcard_collection.not_found'), Response::HTTP_NOT_FOUND);
+            return $this->errorResponse(
+                __('messages.common.not_found', ['entity' => __('messages.entities.flashcard_collection')]),
+                Response::HTTP_NOT_FOUND
+            );
         }
 
         $collection->flashcards()->syncWithoutDetaching($data['flashcard_ids']);
 
         return response()->json([
             'status_code' => Response::HTTP_OK,
-            'message' => __('messages.flashcard_collection.attached'),
+            'message' => __('messages.common.attached', [
+                'entity' => __('messages.entities.flashcard'),
+                'target' => __('messages.entities.flashcard_collection'),
+            ]),
         ]);
     }
 
@@ -170,14 +185,20 @@ class FlashcardCollectionController extends Controller
         $collection = FlashcardCollection::query()->find($id);
 
         if (!$collection) {
-            return $this->errorResponse(__('messages.flashcard_collection.not_found'), Response::HTTP_NOT_FOUND);
+            return $this->errorResponse(
+                __('messages.common.not_found', ['entity' => __('messages.entities.flashcard_collection')]),
+                Response::HTTP_NOT_FOUND
+            );
         }
 
         $collection->flashcards()->detach($data['flashcard_ids']);
 
         return response()->json([
             'status_code' => Response::HTTP_OK,
-            'message' => __('messages.flashcard_collection.detached'),
+            'message' => __('messages.common.detached', [
+                'entity' => __('messages.entities.flashcard'),
+                'target' => __('messages.entities.flashcard_collection'),
+            ]),
         ]);
     }
 }

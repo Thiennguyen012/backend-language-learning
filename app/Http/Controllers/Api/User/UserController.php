@@ -43,7 +43,7 @@ class UserController extends Controller
 
         return response()->json([
             'status_code' => Response::HTTP_OK,
-            'message' => __('messages.user.list'),
+            'message' => __('messages.common.list', ['entity' => __('messages.entities.user')]),
             'data' => $data,
             'meta' => [
                 'current_page' => $users->currentPage(),
@@ -64,11 +64,11 @@ class UserController extends Controller
 
             return response()->json([
                 'status_code' => Response::HTTP_CREATED,
-                'message' => __('messages.user.created'),
+                'message' => __('messages.common.created', ['entity' => __('messages.entities.user')]),
                 'data' => $user,
             ], Response::HTTP_CREATED);
         } catch (\Exception $e) {
-            return $this->handleException($e, __('messages.user.create_error'));
+            return $this->handleException($e, __('messages.common.create_error', ['entity' => __('messages.entities.user')]));
         }
     }
 
@@ -80,12 +80,15 @@ class UserController extends Controller
         $user = $this->userService->find($id);
 
         if (!$user) {
-            return $this->errorResponse(__('messages.user.not_found'), Response::HTTP_NOT_FOUND);
+            return $this->errorResponse(
+                __('messages.common.not_found', ['entity' => __('messages.entities.user')]),
+                Response::HTTP_NOT_FOUND
+            );
         }
 
         return response()->json([
             'status_code' => Response::HTTP_OK,
-            'message' => __('messages.user.fetched'),
+            'message' => __('messages.common.fetched', ['entity' => __('messages.entities.user')]),
             'data' => [
                 ...$user->toArray(),
                 'role_ids' => $user->roles()->pluck('roles.id')->values()->all(),
@@ -102,7 +105,10 @@ class UserController extends Controller
             $user = $this->userService->find($id);
 
             if (!$user) {
-                return $this->errorResponse(__('messages.user.not_found'), Response::HTTP_NOT_FOUND);
+                return $this->errorResponse(
+                    __('messages.common.not_found', ['entity' => __('messages.entities.user')]),
+                    Response::HTTP_NOT_FOUND
+                );
             }
 
             $data = $request->validated();
@@ -117,14 +123,14 @@ class UserController extends Controller
 
             return response()->json([
                 'status_code' => Response::HTTP_OK,
-                'message' => __('messages.user.updated'),
+                'message' => __('messages.common.updated', ['entity' => __('messages.entities.user')]),
                 'data' => [
                     ...$updatedUser->toArray(),
                     'role_ids' => $updatedUser->roles()->pluck('roles.id')->values()->all(),
                 ],
             ]);
         } catch (\Exception $e) {
-            return $this->handleException($e, __('messages.user.update_error'));
+            return $this->handleException($e, __('messages.common.update_error', ['entity' => __('messages.entities.user')]));
         }
     }
 
@@ -137,17 +143,20 @@ class UserController extends Controller
             $user = $this->userService->find($id);
 
             if (!$user) {
-                return $this->errorResponse(__('messages.user.not_found'), Response::HTTP_NOT_FOUND);
+                return $this->errorResponse(
+                    __('messages.common.not_found', ['entity' => __('messages.entities.user')]),
+                    Response::HTTP_NOT_FOUND
+                );
             }
 
             $this->userService->delete($user);
 
             return response()->json([
                 'status_code' => Response::HTTP_OK,
-                'message' => __('messages.user_deleted'),
+                'message' => __('messages.common.deleted', ['entity' => __('messages.entities.user')]),
             ]);
         } catch (\Exception $e) {
-            return $this->handleException($e, __('messages.user.delete_error'));
+            return $this->handleException($e, __('messages.common.delete_error', ['entity' => __('messages.entities.user')]));
         }
     }
 }

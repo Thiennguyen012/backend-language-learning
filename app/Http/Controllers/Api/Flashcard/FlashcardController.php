@@ -36,7 +36,7 @@ class FlashcardController extends Controller
 
         return response()->json([
             'status_code' => Response::HTTP_OK,
-            'message' => __('messages.flashcard.list'),
+            'message' => __('messages.common.list', ['entity' => __('messages.entities.flashcard')]),
             'data' => $flashcards->items(),
             'meta' => [
                 'current_page' => $flashcards->currentPage(),
@@ -57,11 +57,11 @@ class FlashcardController extends Controller
 
             return response()->json([
                 'status_code' => Response::HTTP_CREATED,
-                'message' => __('messages.flashcard.created'),
+                'message' => __('messages.common.created', ['entity' => __('messages.entities.flashcard')]),
                 'data' => $flashcard,
             ], Response::HTTP_CREATED);
         } catch (\Exception $e) {
-            return $this->handleException($e, __('messages.flashcard.create_error'));
+            return $this->handleException($e, __('messages.common.create_error', ['entity' => __('messages.entities.flashcard')]));
         }
     }
 
@@ -73,12 +73,15 @@ class FlashcardController extends Controller
         $flashcard = $this->flashcardService->find($id);
 
         if (!$flashcard) {
-            return $this->errorResponse(__('messages.flashcard.not_found'), Response::HTTP_NOT_FOUND);
+            return $this->errorResponse(
+                __('messages.common.not_found', ['entity' => __('messages.entities.flashcard')]),
+                Response::HTTP_NOT_FOUND
+            );
         }
 
         return response()->json([
             'status_code' => Response::HTTP_OK,
-            'message' => __('messages.flashcard.fetched'),
+            'message' => __('messages.common.fetched', ['entity' => __('messages.entities.flashcard')]),
             'data' => $flashcard,
         ]);
     }
@@ -92,18 +95,21 @@ class FlashcardController extends Controller
             $flashcard = $this->flashcardService->find($id);
 
             if (!$flashcard) {
-                return $this->errorResponse(__('messages.flashcard.not_found'), Response::HTTP_NOT_FOUND);
+                return $this->errorResponse(
+                    __('messages.common.not_found', ['entity' => __('messages.entities.flashcard')]),
+                    Response::HTTP_NOT_FOUND
+                );
             }
 
             $updatedFlashcard = $this->flashcardService->update($flashcard, $request->validated());
 
             return response()->json([
                 'status_code' => Response::HTTP_OK,
-                'message' => __('messages.flashcard.updated'),
+                'message' => __('messages.common.updated', ['entity' => __('messages.entities.flashcard')]),
                 'data' => $updatedFlashcard,
             ]);
         } catch (\Exception $e) {
-            return $this->handleException($e, __('messages.flashcard.update_error'));
+            return $this->handleException($e, __('messages.common.update_error', ['entity' => __('messages.entities.flashcard')]));
         }
     }
 
@@ -116,17 +122,20 @@ class FlashcardController extends Controller
             $flashcard = $this->flashcardService->find($id);
 
             if (!$flashcard) {
-                return $this->errorResponse(__('messages.flashcard.not_found'), Response::HTTP_NOT_FOUND);
+                return $this->errorResponse(
+                    __('messages.common.not_found', ['entity' => __('messages.entities.flashcard')]),
+                    Response::HTTP_NOT_FOUND
+                );
             }
 
             $this->flashcardService->delete($flashcard);
 
             return response()->json([
                 'status_code' => Response::HTTP_OK,
-                'message' => __('messages.flashcard.deleted'),
+                'message' => __('messages.common.deleted', ['entity' => __('messages.entities.flashcard')]),
             ]);
         } catch (\Exception $e) {
-            return $this->handleException($e, __('messages.flashcard.delete_error'));
+            return $this->handleException($e, __('messages.common.delete_error', ['entity' => __('messages.entities.flashcard')]));
         }
     }
 }

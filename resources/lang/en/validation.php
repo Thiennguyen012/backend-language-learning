@@ -31,5 +31,13 @@ return [
             'collection_name' => 'Collection name',
             'description' => 'Description',
         ],
+        'test_type' => [
+            'test_type' => 'Test type',
+        ],
+        'question' => [
+            'question_type_id' => 'Question type',
+            'question_text' => 'Question text',
+            'question_data' => 'Question data',
+        ],
     ],
 ];

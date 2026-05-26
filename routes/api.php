@@ -7,6 +7,8 @@ use App\Http\Controllers\Api\User\UserController;
 use App\Http\Controllers\Api\Order\OrderController;
 use App\Http\Controllers\Api\Flashcard\FlashcardController;
 use App\Http\Controllers\Api\FlashcardCollection\FlashcardCollectionController;
+use App\Http\Controllers\Api\TestType\TestTypeController;
+use App\Http\Controllers\Api\Question\QuestionController;
 use Illuminate\Support\Facades\Route;
 
 // Test CORS endpoint
@@ -71,6 +73,22 @@ Route::prefix('admin')->group(function () {
             Route::delete('/{id}', [FlashcardCollectionController::class, 'destroy']);
             Route::post('/{id}/attach', [FlashcardCollectionController::class, 'attach']);
             Route::post('/{id}/detach', [FlashcardCollectionController::class, 'detach']);
+        });
+
+        Route::prefix('test-types')->group(function () {
+            Route::get('/', [TestTypeController::class, 'index']);
+            Route::post('/', [TestTypeController::class, 'store']);
+            Route::get('/{id}', [TestTypeController::class, 'show']);
+            Route::put('/{id}', [TestTypeController::class, 'update']);
+            Route::delete('/{id}', [TestTypeController::class, 'destroy']);
+        });
+
+        Route::prefix('questions')->group(function () {
+            Route::get('/', [QuestionController::class, 'index']);
+            Route::post('/', [QuestionController::class, 'store']);
+            Route::get('/{id}', [QuestionController::class, 'show']);
+            Route::put('/{id}', [QuestionController::class, 'update']);
+            Route::delete('/{id}', [QuestionController::class, 'destroy']);
         });
     });
 
