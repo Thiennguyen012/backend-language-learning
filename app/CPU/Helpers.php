@@ -2,16 +2,8 @@
 
 namespace App\CPU;
 
-use App\Model\RoomBooking;
-use App\Models\RoomBooking\RoomBookingDetail;
-use App\Models\SiteInfo;
 use App\Repositories\User\UserRepository;
-use App\Repositories\Hotel\RoomRepository;
-use App\Repositories\RoomBooking\RoomBookingRepository;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Facades\Config;
-use Illuminate\Support\Facades\DB;
 use Random\RandomException;
 
 class Helpers
@@ -64,69 +56,6 @@ class Helpers
     {
         return bin2hex(random_bytes($length));
     }
-
-    // public static function allLanguage(): array
-    // {
-    //     return [
-    //         [
-    //             'name' => 'Tiếng việt',
-    //             'code' => 'vi',
-    //             'icon' => '/assets/front-end/img/flags/vi.png',
-    //         ],
-    //         [
-    //             'name' => 'English',
-    //             'code' => 'en',
-    //             'icon' => '/assets/front-end/img/flags/en.png',
-    //         ],
-    //         [
-    //             'name' => 'Japan',
-    //             'code' => 'jp',
-    //             'icon' => '/assets/front-end/img/flags/jp.png',
-    //         ],
-    //         [
-    //             'name' => 'China',
-    //             'code' => 'cn',
-    //             'icon' => '/assets/front-end/img/flags/cn.png',
-    //         ],
-    //         [
-    //             'name' => 'Korea',
-    //             'code' => 'kor',
-    //             'icon' => '/assets/front-end/img/flags/kor.png',
-    //         ]
-    //     ];
-    // }
-
-    // public static function languageValueDefault(): array
-    // {
-    //     return [
-    //         [
-    //             'name' => 'Tiếng việt',
-    //             'code' => 'vi',
-    //             'icon' => '/assets/front-end/img/flags/vi.png',
-    //             'status' => 1,
-    //             'default' => true
-    //         ]
-    //     ];
-    // }
-
-    // public static function languageDefault($lang = []): string
-    // {
-    //     foreach ($lang as $item) {
-    //         if ($item['default']) {
-    //             return $item['code'];
-    //         }
-    //     }
-    //     return '';
-    // }
-
-    // public static function error_processor($validator): array
-    // {
-    //     $err_keeper = [];
-    //     foreach ($validator->errors()->getMessages() as $index => $error) {
-    //         $err_keeper[] = ['code' => $index, 'message' => $error[0]];
-    //     }
-    //     return $err_keeper;
-    // }
 
     public static function cleanValue($value): string
     {
