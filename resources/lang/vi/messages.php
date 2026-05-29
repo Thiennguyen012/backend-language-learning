@@ -33,6 +33,10 @@ return [
         'attached' => 'Gán :entity vào :target thành công',
         'detached' => 'Gỡ :entity khỏi :target thành công',
     ],
+    'collection_test' => [
+        'not_started' => 'Bài test chưa đến thời gian làm',
+        'expired' => 'Bài test đã hết hạn',
+    ],
     'user_test_attempt' => [
         'ended' => 'Phiên làm bài đã kết thúc',
     ],

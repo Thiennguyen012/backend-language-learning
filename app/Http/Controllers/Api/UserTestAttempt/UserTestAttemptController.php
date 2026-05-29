@@ -167,6 +167,15 @@ class UserTestAttemptController extends Controller
             );
         }
 
+        $now = now();
+        if ($collectionTest->started_at && $collectionTest->started_at->isFuture()) {
+            return $this->errorResponse(__('messages.collection_test.not_started'), Response::HTTP_CONFLICT);
+        }
+
+        if ($collectionTest->finished_at && $collectionTest->finished_at->isPast()) {
+            return $this->errorResponse(__('messages.collection_test.expired'), Response::HTTP_CONFLICT);
+        }
+
         $existingAttempt = UserTestAttempt::query()
             ->where('user_id', $userId)
             ->where('collection_test_id', $collectionTest->id)
@@ -213,6 +222,21 @@ class UserTestAttemptController extends Controller
             'expired_at' => $expiresAt,
         ]);
 
+        $questionQuery = $collectionTest->questions();
+        $totalQuestions = (int) ($collectionTest->total_questions ?? 0);
+        if ($totalQuestions > 0) {
+            $questionQuery = $questionQuery->inRandomOrder()->take($totalQuestions);
+        } else {
+            $questionQuery = $questionQuery->inRandomOrder();
+        }
+
+        $questionIds = $questionQuery->pluck('questions.id')->values()->all();
+        if (!empty($questionIds)) {
+            $this->userTestAttemptService->update($attempt, [
+                'question_ids' => $questionIds,
+            ]);
+        }
+
         if ($attempt->expired_at) {
             AutoSubmitUserTestAttempt::dispatch($attempt->id)->delay($attempt->expired_at);
         }
@@ -251,7 +275,9 @@ class UserTestAttemptController extends Controller
             );
         }
 
-        $remainingSeconds = $this->getRemainingSeconds($attempt);
+        $remainingSeconds = (int) $attempt->status === UserTestAttempt::STATUS_SUBMITTED
+            ? 0
+            : $this->getRemainingSeconds($attempt);
 
         return response()->json([
             'status_code' => Response::HTTP_OK,
@@ -297,23 +323,6 @@ class UserTestAttemptController extends Controller
         }
 
         $questionIds = is_array($attempt->question_ids) ? $attempt->question_ids : [];
-
-        if (empty($questionIds)) {
-            $questionQuery = $collectionTest->questions();
-            $totalQuestions = (int) ($collectionTest->total_questions ?? 0);
-
-            if ($totalQuestions > 0) {
-                $questionQuery = $questionQuery->inRandomOrder()->take($totalQuestions);
-            } else {
-                $questionQuery = $questionQuery->inRandomOrder();
-            }
-
-            $questionIds = $questionQuery->pluck('questions.id')->values()->all();
-
-            $this->userTestAttemptService->update($attempt, [
-                'question_ids' => $questionIds,
-            ]);
-        }
 
         if (empty($questionIds)) {
             return response()->json([
@@ -377,7 +386,7 @@ class UserTestAttemptController extends Controller
             );
         }
 
-        if ((int) $attempt->status !== 1) {
+        if ((int) $attempt->status !== UserTestAttempt::STATUS_IN_PROGRESS) {
             return $this->errorResponse(
                 __('messages.user_test_attempt.ended'),
                 Response::HTTP_CONFLICT
@@ -447,7 +456,7 @@ class UserTestAttemptController extends Controller
             );
         }
 
-        if ((int) $attempt->status !== 1) {
+        if ((int) $attempt->status !== UserTestAttempt::STATUS_IN_PROGRESS) {
             return $this->errorResponse(
                 __('messages.user_test_attempt.ended'),
                 Response::HTTP_CONFLICT

@@ -33,6 +33,10 @@ return [
         'attached' => ':entity attached to :target successfully.',
         'detached' => ':entity detached from :target successfully.',
     ],
+    'collection_test' => [
+        'not_started' => 'The test has not started yet.',
+        'expired' => 'The test has expired.',
+    ],
     'user_test_attempt' => [
         'ended' => 'The test attempt has ended.',
     ],

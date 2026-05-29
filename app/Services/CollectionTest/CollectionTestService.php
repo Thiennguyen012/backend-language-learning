@@ -52,6 +52,10 @@ class CollectionTestService
         $questionIds = $data['question_ids'] ?? null;
         unset($data['question_ids']);
 
+        if (is_array($questionIds)) {
+            $data['total_questions'] = count($questionIds);
+        }
+
         return DB::transaction(function () use ($data, $questionIds) {
             $collectionTest = $this->collectionTestRepository->create($data);
 
@@ -71,6 +75,10 @@ class CollectionTestService
         $hasQuestionIds = array_key_exists('question_ids', $data);
         $questionIds = $data['question_ids'] ?? null;
         unset($data['question_ids']);
+
+        if ($hasQuestionIds && is_array($questionIds)) {
+            $data['total_questions'] = count($questionIds);
+        }
 
         return DB::transaction(function () use ($collectionTest, $data, $hasQuestionIds, $questionIds) {
             $updatedCollectionTest = $this->collectionTestRepository->edit($collectionTest, $data);

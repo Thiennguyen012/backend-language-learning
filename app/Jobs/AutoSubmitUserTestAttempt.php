@@ -28,7 +28,7 @@ class AutoSubmitUserTestAttempt implements ShouldQueue
     {
         $attempt = UserTestAttempt::query()->find($this->attemptId);
 
-        if (!$attempt || (int) $attempt->status !== 1) {
+        if (!$attempt || (int) $attempt->status !== UserTestAttempt::STATUS_IN_PROGRESS) {
             return;
         }
 

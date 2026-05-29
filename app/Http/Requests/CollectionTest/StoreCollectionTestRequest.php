@@ -22,14 +22,13 @@ class StoreCollectionTestRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'test_type_id' => 'nullable|integer|exists:test_type,id',
-            'collection_id' => 'nullable|integer|exists:flashcard_collection,id',
+            'test_type_id' => 'required|integer|exists:test_type,id',
+            'collection_id' => 'required|integer|exists:flashcard_collection,id',
             'test_name' => 'required|string|max:255',
-            'total_questions' => 'nullable|integer|min:0',
-            'duration' => 'nullable|integer|min:1',
-            'status' => 'nullable|integer',
-            'started_at' => 'nullable|date',
-            'finished_at' => 'nullable|date',
+            'duration' => 'required|integer|min:1',
+            'status' => 'required|integer',
+            'started_at' => 'required|date',
+            'finished_at' => 'required|date',
             'question_ids' => 'nullable|array',
             'question_ids.*' => 'integer|exists:questions,id',
         ];
@@ -58,7 +57,6 @@ class StoreCollectionTestRequest extends FormRequest
             'test_type_id' => __('validation.attributes.collection_test.test_type_id'),
             'collection_id' => __('validation.attributes.collection_test.collection_id'),
             'test_name' => __('validation.attributes.collection_test.test_name'),
-            'total_questions' => __('validation.attributes.collection_test.total_questions'),
             'duration' => __('validation.attributes.collection_test.duration'),
             'status' => __('validation.attributes.collection_test.status'),
             'started_at' => __('validation.attributes.collection_test.started_at'),

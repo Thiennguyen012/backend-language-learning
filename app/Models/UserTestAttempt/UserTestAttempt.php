@@ -14,6 +14,9 @@ class UserTestAttempt extends Model
 {
     use HasFactory;
 
+    public const STATUS_IN_PROGRESS = 1;
+    public const STATUS_SUBMITTED = 2;
+
     protected $table = 'user_test_attempts';
 
     protected $fillable = [

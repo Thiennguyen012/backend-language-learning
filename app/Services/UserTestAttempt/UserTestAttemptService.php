@@ -5,6 +5,7 @@ namespace App\Services\UserTestAttempt;
 use App\CPU\Helpers;
 use App\Models\UserTestAttempt\UserTestAttempt;
 use App\Repositories\UserTestAttempt\UserTestAttemptInterface;
+use Carbon\Carbon;
 
 class UserTestAttemptService
 {
@@ -77,9 +78,15 @@ class UserTestAttemptService
         $correctCount = $attempt->answers->where('is_correct', true)->count();
         $totalScore = $correctCount;
 
-        $startedAt = $attempt->started_time ?? $attempt->created_at;
-        $elapsedSeconds = now()->diffInSeconds($startedAt);
         $finishedTime = now();
+        $startedTime = $attempt->started_time ?? $attempt->created_at;
+        if (is_string($startedTime)) {
+            $startedTime = Carbon::parse($startedTime);
+        }
+
+        $elapsedSeconds = $startedTime
+            ? max(0, $finishedTime->getTimestamp() - $startedTime->getTimestamp())
+            : 0;
 
         $data = [
             'status' => 2,
