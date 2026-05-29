@@ -27,8 +27,8 @@ class StoreUserTestAttemptRequest extends FormRequest
             'status' => 'nullable|integer',
             'correct_count' => 'required|integer|min:0',
             'total_score' => 'required|integer|min:0',
-            'started_time' => 'nullable|date_format:H:i:s',
-            'finished_time' => 'nullable|date_format:H:i:s',
+            'started_time' => 'nullable|date',
+            'finished_time' => 'nullable|date',
             'total_time' => 'nullable|date_format:H:i:s',
         ];
     }

@@ -9,6 +9,7 @@ use App\Http\Controllers\Api\Flashcard\FlashcardController;
 use App\Http\Controllers\Api\FlashcardCollection\FlashcardCollectionController;
 use App\Http\Controllers\Api\CollectionTest\CollectionTestController;
 use App\Http\Controllers\Api\UserTestAttempt\UserTestAttemptController;
+use App\Http\Controllers\Api\UserTestAnswer\UserTestAnswerController;
 use App\Http\Controllers\Api\TestType\TestTypeController;
 use App\Http\Controllers\Api\Question\QuestionController;
 use Illuminate\Support\Facades\Route;
@@ -85,12 +86,27 @@ Route::prefix('admin')->group(function () {
             Route::delete('/{id}', [CollectionTestController::class, 'destroy']);
         });
 
+        Route::post('/tests/{id}/start', [UserTestAttemptController::class, 'start']);
+
         Route::prefix('user-test-attempts')->group(function () {
             Route::get('/', [UserTestAttemptController::class, 'index']);
             Route::post('/', [UserTestAttemptController::class, 'store']);
             Route::get('/{id}', [UserTestAttemptController::class, 'show']);
             Route::put('/{id}', [UserTestAttemptController::class, 'update']);
             Route::delete('/{id}', [UserTestAttemptController::class, 'destroy']);
+        });
+
+        Route::get('/attempts/{id}', [UserTestAttemptController::class, 'remaining']);
+        Route::get('/attempts/{id}/questions', [UserTestAttemptController::class, 'questions']);
+        Route::post('/attempts/{id}/answers', [UserTestAttemptController::class, 'answer']);
+        Route::post('/attempts/{id}/submit', [UserTestAttemptController::class, 'submit']);
+
+        Route::prefix('user-test-answers')->group(function () {
+            Route::get('/', [UserTestAnswerController::class, 'index']);
+            Route::post('/', [UserTestAnswerController::class, 'store']);
+            Route::get('/{id}', [UserTestAnswerController::class, 'show']);
+            Route::put('/{id}', [UserTestAnswerController::class, 'update']);
+            Route::delete('/{id}', [UserTestAnswerController::class, 'destroy']);
         });
 
         Route::prefix('test-types')->group(function () {

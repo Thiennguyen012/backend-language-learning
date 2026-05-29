@@ -8,6 +8,7 @@ return [
         'flashcard_collection' => 'Bộ flashcard',
         'collection_test' => 'Bài test',
         'user_test_attempt' => 'Lượt làm bài',
+        'user_test_answer' => 'Đáp án người dùng',
         'test_type' => 'Loại bài test',
         'question' => 'Câu hỏi',
         'original_word' => 'Từ gốc',
@@ -31,6 +32,9 @@ return [
         'delete_error' => 'Lỗi khi xóa :entity',
         'attached' => 'Gán :entity vào :target thành công',
         'detached' => 'Gỡ :entity khỏi :target thành công',
+    ],
+    'user_test_attempt' => [
+        'ended' => 'Phiên làm bài đã kết thúc',
     ],
 
 ];

@@ -52,6 +52,12 @@ return [
             'finished_time' => 'Thời gian kết thúc',
             'total_time' => 'Tổng thời gian',
         ],
+        'user_test_answer' => [
+            'user_test_attempt_id' => 'Lượt làm bài',
+            'question_id' => 'Câu hỏi',
+            'user_answer' => 'Câu trả lời',
+            'is_correct' => 'Đúng/Sai',
+        ],
         'test_type' => [
             'test_type' => 'Loại bài test',
         ],

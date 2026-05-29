@@ -7,6 +7,8 @@ use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use App\Models\UserTestAnswer\UserTestAnswer;
 
 class UserTestAttempt extends Model
 {
@@ -23,6 +25,8 @@ class UserTestAttempt extends Model
         'started_time',
         'finished_time',
         'total_time',
+        'question_ids',
+        'expired_at',
     ];
 
     protected $casts = [
@@ -31,9 +35,11 @@ class UserTestAttempt extends Model
         'status' => 'integer',
         'correct_count' => 'integer',
         'total_score' => 'integer',
-        'started_time' => 'string',
-        'finished_time' => 'string',
+        'started_time' => 'datetime',
+        'finished_time' => 'datetime',
         'total_time' => 'string',
+        'question_ids' => 'array',
+        'expired_at' => 'datetime',
     ];
 
     public function user(): BelongsTo
@@ -44,5 +50,10 @@ class UserTestAttempt extends Model
     public function collectionTest(): BelongsTo
     {
         return $this->belongsTo(CollectionTest::class, 'collection_test_id');
+    }
+
+    public function answers(): HasMany
+    {
+        return $this->hasMany(UserTestAnswer::class, 'user_test_attempt_id');
     }
 }

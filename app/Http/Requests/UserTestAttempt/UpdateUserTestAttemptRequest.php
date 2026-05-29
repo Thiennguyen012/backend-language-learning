@@ -27,8 +27,8 @@ class UpdateUserTestAttemptRequest extends FormRequest
             'status' => 'sometimes|nullable|integer',
             'correct_count' => 'sometimes|required|integer|min:0',
             'total_score' => 'sometimes|required|integer|min:0',
-            'started_time' => 'sometimes|nullable|date_format:H:i:s',
-            'finished_time' => 'sometimes|nullable|date_format:H:i:s',
+            'started_time' => 'sometimes|nullable|date',
+            'finished_time' => 'sometimes|nullable|date',
             'total_time' => 'sometimes|nullable|date_format:H:i:s',
         ];
     }

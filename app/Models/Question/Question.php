@@ -8,6 +8,8 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use App\Models\UserTestAnswer\UserTestAnswer;
 
 class Question extends Model
 {
@@ -40,5 +42,10 @@ class Question extends Model
             'question_id',
             'collection_test_id'
         );
+    }
+
+    public function userTestAnswers(): HasMany
+    {
+        return $this->hasMany(UserTestAnswer::class, 'question_id');
     }
 }

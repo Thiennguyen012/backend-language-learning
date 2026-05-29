@@ -3,6 +3,7 @@
 namespace App\Services\UserTestAttempt;
 
 use App\CPU\Helpers;
+use App\Models\UserTestAttempt\UserTestAttempt;
 use App\Repositories\UserTestAttempt\UserTestAttemptInterface;
 
 class UserTestAttemptService
@@ -67,5 +68,37 @@ class UserTestAttemptService
     public function delete($attempt)
     {
         return $this->userTestAttemptRepository->delete($attempt);
+    }
+
+    public function finalizeAttempt(UserTestAttempt $attempt): UserTestAttempt
+    {
+        $attempt->loadMissing('answers');
+
+        $correctCount = $attempt->answers->where('is_correct', true)->count();
+        $totalScore = $correctCount;
+
+        $startedAt = $attempt->started_time ?? $attempt->created_at;
+        $elapsedSeconds = now()->diffInSeconds($startedAt);
+        $finishedTime = now();
+
+        $data = [
+            'status' => 2,
+            'correct_count' => $correctCount,
+            'total_score' => $totalScore,
+            'finished_time' => $finishedTime,
+            'total_time' => $this->secondsToTime($elapsedSeconds),
+        ];
+
+        return $this->userTestAttemptRepository->edit($attempt, $data);
+    }
+
+    private function secondsToTime(int $seconds): string
+    {
+        $seconds = max(0, $seconds);
+        $hours = (int) floor($seconds / 3600);
+        $minutes = (int) floor(($seconds % 3600) / 60);
+        $remaining = $seconds % 60;
+
+        return sprintf('%02d:%02d:%02d', $hours, $minutes, $remaining);
     }
 }

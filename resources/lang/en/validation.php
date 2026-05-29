@@ -52,6 +52,12 @@ return [
             'finished_time' => 'Finish time',
             'total_time' => 'Total time',
         ],
+        'user_test_answer' => [
+            'user_test_attempt_id' => 'User test attempt',
+            'question_id' => 'Question',
+            'user_answer' => 'User answer',
+            'is_correct' => 'Is correct',
+        ],
         'test_type' => [
             'test_type' => 'Test type',
         ],

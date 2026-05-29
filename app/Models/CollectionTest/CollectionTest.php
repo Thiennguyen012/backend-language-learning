@@ -21,12 +21,14 @@ class CollectionTest extends Model
         'collection_id',
         'test_name',
         'total_questions',
+        'duration',
         'status',
         'started_at',
         'finished_at',
     ];
 
     protected $casts = [
+        'duration' => 'integer',
         'started_at' => 'datetime',
         'finished_at' => 'datetime',
     ];
