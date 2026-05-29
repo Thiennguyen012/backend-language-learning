@@ -29,13 +29,13 @@ return [
             'word_type_id' => 'Loại từ',
         ],
         'flashcard_collection' => [
-            'collection_name' => 'Ten Bộ',
+            'collection_name' => 'Tên Bộ',
             'description' => 'Mô tả',
         ],
         'collection_test' => [
-            'test_type_id' => 'Loại bài test',
+            'test_type_id' => 'Loại bài kiểm tra',
             'collection_id' => 'Bộ flashcard',
-            'test_name' => 'Tên bài test',
+            'test_name' => 'Tên bài kiểm tra',
             'total_questions' => 'Tổng số câu hỏi',
             'status' => 'Trạng thái',
             'started_at' => 'Thời gian bắt đầu',
@@ -44,7 +44,7 @@ return [
         ],
         'user_test_attempt' => [
             'user_id' => 'Người dùng',
-            'collection_test_id' => 'Bài test',
+            'collection_test_id' => 'Bài kiểm tra',
             'status' => 'Trạng thái',
             'correct_count' => 'Số câu đúng',
             'total_score' => 'Tổng điểm',
@@ -59,7 +59,7 @@ return [
             'is_correct' => 'Đúng/Sai',
         ],
         'test_type' => [
-            'test_type' => 'Loại bài test',
+            'test_type' => 'Loại bài kiểm tra',
         ],
         'question' => [
             'question_type_id' => 'Loại câu hỏi',
