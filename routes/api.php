@@ -125,24 +125,4 @@ Route::prefix('admin')->group(function () {
             Route::delete('/{id}', [QuestionController::class, 'destroy']);
         });
     });
-
-    Route::prefix('orders')->group(function () {
-        Route::post('/decrypt', [OrderController::class, 'decryptPayload']);
-
-        // Authenticated routes
-        Route::middleware('auth:sanctum')->group(function () {
-            Route::get('/my-orders', [OrderController::class, 'myOrders']);
-            Route::post('/', [OrderController::class, 'store']);
-            Route::put('/{id}', [OrderController::class, 'update']); // User can update their own orders, Super Admin can update any
-
-            Route::middleware('super_admin')->group(function () {
-                Route::get('/', [OrderController::class, 'index']);
-                Route::patch('/{id}/status', [OrderController::class, 'updateStatus']); // Update status only (Super Admin)
-                Route::delete('/{id}', [OrderController::class, 'destroy']);
-            });
-        });
-
-        // Public routes - no auth needed
-        Route::get('/{id}', [OrderController::class, 'show'])->whereNumber('id');
-    });
 });
