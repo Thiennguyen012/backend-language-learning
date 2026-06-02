@@ -4,7 +4,6 @@ use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\Permission\PermissionController;
 use App\Http\Controllers\Api\Role\RoleController;
 use App\Http\Controllers\Api\User\UserController;
-use App\Http\Controllers\Api\Order\OrderController;
 use App\Http\Controllers\Api\Flashcard\FlashcardController;
 use App\Http\Controllers\Api\FlashcardCollection\FlashcardCollectionController;
 use App\Http\Controllers\Api\CollectionTest\CollectionTestController;
