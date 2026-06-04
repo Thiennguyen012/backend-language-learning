@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Auth\UpdateProfileRequest;
 use App\Services\User\UserAuthService;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -68,16 +69,9 @@ class AuthController extends Controller
         ]);
     }
 
-    public function updateProfile(Request $request)
+    public function updateProfile(UpdateProfileRequest $request)
     {
-        $data = $request->validate([
-            'name' => 'sometimes|string|max:255',
-            'phone' => 'sometimes|string|max:50',
-            'birthday' => 'sometimes|date',
-            'address' => 'sometimes|string|max:256',
-            'avatar' => 'sometimes|string',
-            'password' => 'sometimes|string|min:6',
-        ]);
+        $data = $request->validated();
 
         $updatedUser = $this->authService->update($request->user(), $data);
 
