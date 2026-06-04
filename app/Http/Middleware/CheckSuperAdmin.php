@@ -19,9 +19,9 @@ class CheckSuperAdmin
 
         if (!$user || !$user->is_super_admin) {
             return response()->json([
-                'status_code' => 403,
-                'message' => 'Unauthorized. Super admin access required.'
-            ], 403);
+                'status_code' => Response::HTTP_FORBIDDEN,
+                'message' => __('messages.common.forbidden')
+            ], Response::HTTP_FORBIDDEN);
         }
 
         return $next($request);

@@ -20,11 +20,18 @@ class Helpers
 
     public static function permission_check($permission_name): bool
     {
-        $admin = Auth::guard('user')->user();
-        if ($admin->is_super_admin == UserRepository::IS_SUPER_ADMIN || $admin->can($permission_name)) {
+        $user = Auth::user();
+        if (!$user) {
+            return false;
+        }
+
+        if ($user->is_super_admin == UserRepository::IS_SUPER_ADMIN) {
             return true;
         }
-        return false;
+
+        return $user->roles()->whereHas('permissions', function ($query) use ($permission_name) {
+            $query->where('permission_name', $permission_name);
+        })->exists();
     }
     static function getExtension($ex)
     {

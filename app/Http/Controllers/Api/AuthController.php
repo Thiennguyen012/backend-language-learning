@@ -27,7 +27,7 @@ class AuthController extends Controller
 
         return response()->json([
             'status_code' => Response::HTTP_OK,
-            'message' => 'Login successful',
+            'message' => __('messages.common.success', ['entity' => __('messages.entities.login')]),
             'data' => [
                 'user' => $result['user'],
                 'token' => $result['token'],
@@ -37,11 +37,11 @@ class AuthController extends Controller
 
     public function logout(Request $request)
     {
-        $request->user()->tokens()->delete();
+        $this->authService->logout($request->user());
 
         return response()->json([
             'status_code' => Response::HTTP_OK,
-            'message' => 'Logout successful'
+            'message' => __('messages.common.success', ['entity' => __('messages.entities.logout')]),
         ]);
     }
 
@@ -60,7 +60,7 @@ class AuthController extends Controller
 
         return response()->json([
             'status_code' => Response::HTTP_OK,
-            'message' => 'Get profile success',
+            'message' => __('messages.common.fetched', ['entity' => __('messages.entities.profile')]),
             'data' => [
                 ...$payload,
                 'permissions' => $permissions,
@@ -83,7 +83,7 @@ class AuthController extends Controller
 
         return response()->json([
             'status_code' => Response::HTTP_OK,
-            'message' => 'Profile updated successfully',
+            'message' => __('messages.common.updated', ['entity' => __('messages.entities.profile')]),
             'data' => $updatedUser
         ]);
     }

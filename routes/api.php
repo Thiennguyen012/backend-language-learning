@@ -24,7 +24,7 @@ Route::get('/test-cors', function () {
 
 Route::prefix('admin')->group(function () {
     Route::prefix('auth')->group(function () {
-        Route::post('/login', [AuthController::class, 'login']);
+        Route::post('/login', [AuthController::class, 'login'])->middleware('throttle:5,1');
 
         Route::middleware('auth:sanctum')->group(function () {
             Route::post('/logout', [AuthController::class, 'logout']);
@@ -45,29 +45,29 @@ Route::prefix('admin')->group(function () {
 
     Route::middleware('auth:sanctum')->group(function () {
         Route::prefix('roles')->group(function () {
-            Route::get('/', [RoleController::class, 'index']);
-            Route::post('/', [RoleController::class, 'store']);
-            Route::get('/{role}', [RoleController::class, 'show']);
-            Route::put('/{role}', [RoleController::class, 'update']);
-            Route::delete('/{role}', [RoleController::class, 'destroy']);
+            Route::get('/', [RoleController::class, 'index'])->middleware('permission:view_roles');
+            Route::post('/', [RoleController::class, 'store'])->middleware('permission:manage_roles');
+            Route::get('/{role}', [RoleController::class, 'show'])->middleware('permission:view_roles');
+            Route::put('/{role}', [RoleController::class, 'update'])->middleware('permission:manage_roles');
+            Route::delete('/{role}', [RoleController::class, 'destroy'])->middleware('permission:manage_roles');
         });
 
         Route::prefix('permissions')->group(function () {
-            Route::get('/', [PermissionController::class, 'index']);
-            Route::post('/', [PermissionController::class, 'store']);
-            Route::get('/{permission}', [PermissionController::class, 'show']);
-            Route::put('/{permission}', [PermissionController::class, 'update']);
-            Route::delete('/{permission}', [PermissionController::class, 'destroy']);
+            Route::get('/', [PermissionController::class, 'index'])->middleware('permission:view_permissions');
+            Route::post('/', [PermissionController::class, 'store'])->middleware('permission:manage_permissions');
+            Route::get('/{permission}', [PermissionController::class, 'show'])->middleware('permission:view_permissions');
+            Route::put('/{permission}', [PermissionController::class, 'update'])->middleware('permission:manage_permissions');
+            Route::delete('/{permission}', [PermissionController::class, 'destroy'])->middleware('permission:manage_permissions');
         });
 
-        Route::prefix('flashcards')->group(function () {
+        Route::prefix('flashcards')->middleware('permission:manage_flashcards')->group(function () {
             Route::post('/', [FlashcardController::class, 'store']);
             Route::get('/{id}', [FlashcardController::class, 'show']);
             Route::put('/{id}', [FlashcardController::class, 'update']);
             Route::delete('/{id}', [FlashcardController::class, 'destroy']);
         });
 
-        Route::prefix('flashcard-collections')->group(function () {
+        Route::prefix('flashcard-collections')->middleware('permission:manage_flashcards')->group(function () {
             Route::get('/', [FlashcardCollectionController::class, 'index']);
             Route::post('/', [FlashcardCollectionController::class, 'store']);
             Route::get('/{id}', [FlashcardCollectionController::class, 'show']);
@@ -77,7 +77,7 @@ Route::prefix('admin')->group(function () {
             Route::post('/{id}/detach', [FlashcardCollectionController::class, 'detach']);
         });
 
-        Route::prefix('collection-tests')->group(function () {
+        Route::prefix('collection-tests')->middleware('permission:manage_tests')->group(function () {
             Route::get('/', [CollectionTestController::class, 'index']);
             Route::post('/', [CollectionTestController::class, 'store']);
             Route::get('/{id}', [CollectionTestController::class, 'show']);
@@ -108,7 +108,7 @@ Route::prefix('admin')->group(function () {
             Route::delete('/{id}', [UserTestAnswerController::class, 'destroy']);
         });
 
-        Route::prefix('test-types')->group(function () {
+        Route::prefix('test-types')->middleware('permission:manage_tests')->group(function () {
             Route::get('/', [TestTypeController::class, 'index']);
             Route::post('/', [TestTypeController::class, 'store']);
             Route::get('/{id}', [TestTypeController::class, 'show']);
@@ -116,7 +116,7 @@ Route::prefix('admin')->group(function () {
             Route::delete('/{id}', [TestTypeController::class, 'destroy']);
         });
 
-        Route::prefix('questions')->group(function () {
+        Route::prefix('questions')->middleware('permission:manage_questions')->group(function () {
             Route::get('/', [QuestionController::class, 'index']);
             Route::post('/', [QuestionController::class, 'store']);
             Route::get('/{id}', [QuestionController::class, 'show']);

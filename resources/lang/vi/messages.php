@@ -18,7 +18,10 @@ return [
         'description' => 'Mô tả',
         'question_type' => 'Loại câu hỏi',
         'question_text' => 'Nội dung câu hỏi',
-        'question_data' => 'Dữ liệu câu hỏi'
+        'question_data' => 'Dữ liệu câu hỏi',
+        'profile' => 'Thông tin cá nhân',
+        'login' => 'Đăng nhập',
+        'logout' => 'Đăng xuất',
     ],
     'common' => [
         'list' => 'Lấy danh sách :entity thành công',
@@ -32,6 +35,9 @@ return [
         'delete_error' => 'Lỗi khi xóa :entity',
         'attached' => 'Gán :entity vào :target thành công',
         'detached' => 'Gỡ :entity khỏi :target thành công',
+        'success' => 'Thành công',
+        'unauthorized' => 'Không có quyền truy cập',
+        'forbidden' => 'Không có quyền truy cập',
     ],
     'collection_test' => [
         'not_started' => 'Bài kiểm tra chưa bắt đầu',

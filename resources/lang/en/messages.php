@@ -18,7 +18,10 @@ return [
         'description' => 'Description',
         'question_type' => 'Question type',
         'question_text' => 'Question text',
-        'question_data' => 'Question data'
+        'question_data' => 'Question data',
+        'profile' => 'Profile',
+        'login' => 'Login',
+        'logout' => 'Logout',
     ],
     'common' => [
         'list' => 'Fetched :entity list successfully.',
@@ -32,6 +35,9 @@ return [
         'delete_error' => 'Error deleting :entity.',
         'attached' => ':entity attached to :target successfully.',
         'detached' => ':entity detached from :target successfully.',
+        'success' => 'Success',
+        'unauthorized' => 'Unauthorized.',
+        'forbidden' => 'Forbidden'
     ],
     'collection_test' => [
         'not_started' => 'The test has not started yet.',
