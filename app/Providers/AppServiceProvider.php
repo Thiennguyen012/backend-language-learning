@@ -4,6 +4,8 @@ namespace App\Providers;
 
 use App\Repositories\User\UserInterface;
 use App\Repositories\User\UserRepository;
+use App\Repositories\RefreshToken\RefreshTokenInterface;
+use App\Repositories\RefreshToken\RefreshTokenRepository;
 use App\Repositories\Order\OrderInterface;
 use App\Repositories\Order\OrderRepository;
 use App\Repositories\CustomerOrder\CustomerOrderInterface;
@@ -34,6 +36,7 @@ class AppServiceProvider extends ServiceProvider
     public function register(): void
     {
         $this->app->bind(UserInterface::class, UserRepository::class);
+        $this->app->bind(RefreshTokenInterface::class, RefreshTokenRepository::class);
         $this->app->bind(OrderInterface::class, OrderRepository::class);
         $this->app->bind(CustomerOrderInterface::class, CustomerOrderRepository::class);
         $this->app->bind(FlashcardInterface::class, FlashcardRepository::class);

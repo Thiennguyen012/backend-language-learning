@@ -24,25 +24,81 @@ class AuthController extends Controller
             'password' => 'required',
         ]);
 
-        $result = $this->authService->login($credentials);
+        $deviceInfo = [
+            'device_name' => $request->input('device_name', 'Unknown'),
+            'ip_address' => $request->ip(),
+            'user_agent' => $request->userAgent(),
+        ];
+
+        $result = $this->authService->login($credentials, $deviceInfo);
 
         return response()->json([
             'status_code' => Response::HTTP_OK,
             'message' => __('messages.common.success', ['entity' => __('messages.entities.login')]),
             'data' => [
                 'user' => $result['user'],
-                'token' => $result['token'],
+                'access_token' => $result['access_token'],
+                'refresh_token' => $result['refresh_token'],
+                'token_type' => $result['token_type'],
+                'access_token_expires_in' => $result['access_token_expires_in'],
+                'refresh_token_expires_in' => $result['refresh_token_expires_in'],
+            ]
+        ]);
+    }
+
+    public function refresh(Request $request)
+    {
+        $request->validate([
+            'refresh_token' => 'required|string',
+        ]);
+
+        $result = $this->authService->refresh($request->refresh_token);
+
+        return response()->json([
+            'status_code' => Response::HTTP_OK,
+            'message' => __('messages.common.success', ['entity' => __('messages.entities.token_refresh')]),
+            'data' => [
+                'user' => $result['user'],
+                'access_token' => $result['access_token'],
+                'token_type' => $result['token_type'],
+                'access_token_expires_in' => $result['access_token_expires_in'],
             ]
         ]);
     }
 
     public function logout(Request $request)
     {
+        // Option 1: Logout chỉ access token hiện tại
         $this->authService->logout($request->user());
 
         return response()->json([
             'status_code' => Response::HTTP_OK,
             'message' => __('messages.common.success', ['entity' => __('messages.entities.logout')]),
+        ]);
+    }
+
+    public function logoutFromDevice(Request $request)
+    {
+        $request->validate([
+            'refresh_token' => 'required|string',
+        ]);
+
+        // Logout thiết bị cụ thể bằng refresh token
+        $this->authService->logout($request->user(), $request->refresh_token);
+
+        return response()->json([
+            'status_code' => Response::HTTP_OK,
+            'message' => 'Logged out from device successfully',
+        ]);
+    }
+
+    public function logoutFromAllDevices(Request $request)
+    {
+        $this->authService->logoutFromAllDevices($request->user());
+
+        return response()->json([
+            'status_code' => Response::HTTP_OK,
+            'message' => 'Logged out from all devices successfully',
         ]);
     }
 

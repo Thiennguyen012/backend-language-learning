@@ -1,0 +1,16 @@
+<?php
+
+namespace App\Repositories\RefreshToken;
+
+use App\Repositories\Base\BaseInterface;
+
+interface RefreshTokenInterface extends BaseInterface
+{
+    public function findByToken(string $token);
+    
+    public function revokeUserTokens(int $userId);
+    
+    public function deleteExpiredTokens();
+    
+    public function deleteUserExpiredTokens(int $userId);
+}

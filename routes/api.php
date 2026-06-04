@@ -25,9 +25,12 @@ Route::get('/test-cors', function () {
 Route::prefix('admin')->group(function () {
     Route::prefix('auth')->group(function () {
         Route::post('/login', [AuthController::class, 'login'])->middleware('throttle:5,1');
+        Route::post('/refresh', [AuthController::class, 'refresh']);
 
         Route::middleware('auth:sanctum')->group(function () {
             Route::post('/logout', [AuthController::class, 'logout']);
+            Route::post('/logout-device', [AuthController::class, 'logoutFromDevice']);
+            Route::post('/logout-all', [AuthController::class, 'logoutFromAllDevices']);
             Route::get('/me', [AuthController::class, 'me']);
             Route::put('/profile', [AuthController::class, 'updateProfile']);
         });

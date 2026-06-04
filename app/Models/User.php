@@ -15,6 +15,7 @@ use Laravel\Sanctum\HasApiTokens;
 use App\Models\Order\Order;
 use App\Models\CustomerOrder\CustomerOrder;
 use App\Models\Role\Role;
+use App\Models\RefreshToken\RefreshToken;
 
 class User extends Authenticatable
 {
@@ -90,5 +91,13 @@ class User extends Authenticatable
     public function roles(): BelongsToMany
     {
         return $this->belongsToMany(Role::class, 'role_user', 'user_id', 'role_id');
+    }
+
+    /**
+     * Get all refresh tokens for this user.
+     */
+    public function refreshTokens(): HasMany
+    {
+        return $this->hasMany(RefreshToken::class);
     }
 }
