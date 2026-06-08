@@ -97,16 +97,8 @@ class UserAuthService
         // Revoke current access token
         $user->currentAccessToken()->delete();
         
-        // Nếu có refresh token → logout thiết bị cụ thể
-        if ($refreshTokenString) {
-            $hashedToken = hash('sha256', $refreshTokenString);
-            $refreshToken = $this->refreshTokenRepository->findByToken($hashedToken);
-            if ($refreshToken) {
-                $refreshToken->revoke();
-            }
-        }
-        // Nếu không có refresh token → chỉ logout access token hiện tại
-        // (các thiết bị khác vẫn login được vì refresh token còn valid)
+        // Revoke all refresh tokens của user
+        $this->refreshTokenRepository->revokeUserTokens($user->id);
         
         return true;
     }
