@@ -36,7 +36,7 @@ Route::prefix('admin')->group(function () {
         });
     });
 
-    Route::middleware('auth:sanctum', 'super_admin')->group(function () {
+    Route::middleware('auth:sanctum')->group(function () {
         Route::prefix('users')->group(function () {
             Route::get('/', [UserController::class, 'index'])->middleware('permission:user.view');
             Route::post('/', [UserController::class, 'store'])->middleware('permission:user.create');
@@ -44,9 +44,7 @@ Route::prefix('admin')->group(function () {
             Route::put('/{id}', [UserController::class, 'update'])->middleware('permission:user.update');
             Route::delete('/{id}', [UserController::class, 'destroy'])->middleware('permission:user.delete');
         });
-    });
 
-    Route::middleware('auth:sanctum')->group(function () {
         Route::prefix('roles')->group(function () {
             Route::get('/', [RoleController::class, 'index'])->middleware('permission:role.view');
             Route::post('/', [RoleController::class, 'store'])->middleware('permission:role.create');
