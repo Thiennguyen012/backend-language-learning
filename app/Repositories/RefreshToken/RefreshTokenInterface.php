@@ -7,7 +7,9 @@ use App\Repositories\Base\BaseInterface;
 interface RefreshTokenInterface extends BaseInterface
 {
     public function findByToken(string $token);
-    
+
+    public function revokeTokenForUser(int $userId, string $token);
+
     public function revokeUserTokens(int $userId);
     
     public function deleteExpiredTokens();

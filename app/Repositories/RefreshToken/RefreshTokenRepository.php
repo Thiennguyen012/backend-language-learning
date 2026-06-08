@@ -21,6 +21,15 @@ class RefreshTokenRepository extends BaseRepository implements RefreshTokenInter
             ->first();
     }
 
+    public function revokeTokenForUser(int $userId, string $token)
+    {
+        return $this->model
+            ->where('user_id', $userId)
+            ->where('token', $token)
+            ->where('is_revoked', false)
+            ->update(['is_revoked' => true]);
+    }
+
     public function revokeUserTokens(int $userId)
     {
         return $this->model

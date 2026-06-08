@@ -68,8 +68,11 @@ class AuthController extends Controller
 
     public function logout(Request $request)
     {
-        // Option 1: Logout chỉ access token hiện tại
-        $this->authService->logout($request->user());
+        $request->validate([
+            'refresh_token' => 'nullable|string',
+        ]);
+
+        $this->authService->logout($request->user(), $request->refresh_token);
 
         return response()->json([
             'status_code' => Response::HTTP_OK,
@@ -83,8 +86,7 @@ class AuthController extends Controller
             'refresh_token' => 'required|string',
         ]);
 
-        // Logout thiết bị cụ thể bằng refresh token
-        $this->authService->logout($request->user(), $request->refresh_token);
+        $this->authService->logoutFromDevice($request->user(), $request->refresh_token);
 
         return response()->json([
             'status_code' => Response::HTTP_OK,
