@@ -6,6 +6,7 @@ use App\CPU\Helpers;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\UserTestAnswer\StoreUserTestAnswerRequest;
 use App\Http\Requests\UserTestAnswer\UpdateUserTestAnswerRequest;
+use App\Http\Resources\UserTestAnswerResource;
 use App\Services\UserTestAnswer\UserTestAnswerService;
 use App\Traits\ValidatesRequestData;
 use Illuminate\Http\JsonResponse;
@@ -37,7 +38,7 @@ class UserTestAnswerController extends Controller
         return response()->json([
             'status_code' => Response::HTTP_OK,
             'message' => __('messages.common.list', ['entity' => __('messages.entities.user_test_answer')]),
-            'data' => $answers->items(),
+            'data' => UserTestAnswerResource::collection($answers->getCollection()),
             'meta' => [
                 'current_page' => $answers->currentPage(),
                 'last_page' => $answers->lastPage(),
@@ -68,7 +69,7 @@ class UserTestAnswerController extends Controller
                 'message' => $existing
                     ? __('messages.common.updated', ['entity' => __('messages.entities.user_test_answer')])
                     : __('messages.common.created', ['entity' => __('messages.entities.user_test_answer')]),
-                'data' => $answer,
+                'data' => new UserTestAnswerResource($answer),
             ], $existing ? Response::HTTP_OK : Response::HTTP_CREATED);
         } catch (\Exception $e) {
             return $this->handleException($e, __('messages.common.create_error', ['entity' => __('messages.entities.user_test_answer')]));
@@ -92,7 +93,7 @@ class UserTestAnswerController extends Controller
         return response()->json([
             'status_code' => Response::HTTP_OK,
             'message' => __('messages.common.fetched', ['entity' => __('messages.entities.user_test_answer')]),
-            'data' => $answer,
+            'data' => new UserTestAnswerResource($answer),
         ]);
     }
 
@@ -116,7 +117,7 @@ class UserTestAnswerController extends Controller
             return response()->json([
                 'status_code' => Response::HTTP_OK,
                 'message' => __('messages.common.updated', ['entity' => __('messages.entities.user_test_answer')]),
-                'data' => $updatedAnswer,
+                'data' => new UserTestAnswerResource($updatedAnswer),
             ]);
         } catch (\Exception $e) {
             return $this->handleException($e, __('messages.common.update_error', ['entity' => __('messages.entities.user_test_answer')]));

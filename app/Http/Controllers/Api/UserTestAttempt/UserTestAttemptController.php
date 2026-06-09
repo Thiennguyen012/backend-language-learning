@@ -7,6 +7,8 @@ use App\Http\Controllers\Controller;
 use App\Jobs\AutoSubmitUserTestAttempt;
 use App\Http\Requests\UserTestAttempt\StoreUserTestAttemptRequest;
 use App\Http\Requests\UserTestAttempt\UpdateUserTestAttemptRequest;
+use App\Http\Resources\UserTestAnswerResource;
+use App\Http\Resources\UserTestAttemptResource;
 use App\Models\CollectionTest\CollectionTest;
 use App\Models\Question\Question;
 use App\Models\UserTestAttempt\UserTestAttempt;
@@ -44,7 +46,7 @@ class UserTestAttemptController extends Controller
         return response()->json([
             'status_code' => Response::HTTP_OK,
             'message' => __('messages.common.list', ['entity' => __('messages.entities.user_test_attempt')]),
-            'data' => $attempts->items(),
+            'data' => UserTestAttemptResource::collection($attempts->getCollection()),
             'meta' => [
                 'current_page' => $attempts->currentPage(),
                 'last_page' => $attempts->lastPage(),
@@ -65,7 +67,7 @@ class UserTestAttemptController extends Controller
             return response()->json([
                 'status_code' => Response::HTTP_CREATED,
                 'message' => __('messages.common.created', ['entity' => __('messages.entities.user_test_attempt')]),
-                'data' => $attempt,
+                'data' => new UserTestAttemptResource($attempt),
             ], Response::HTTP_CREATED);
         } catch (\Exception $e) {
             return $this->handleException($e, __('messages.common.create_error', ['entity' => __('messages.entities.user_test_attempt')]));
@@ -77,7 +79,7 @@ class UserTestAttemptController extends Controller
      */
     public function show(string $id): JsonResponse
     {
-        $attempt = $this->userTestAttemptService->find($id, ['user', 'collectionTest']);
+        $attempt = $this->userTestAttemptService->find($id, ['collectionTest', 'answers']);
 
         if (!$attempt) {
             return $this->errorResponse(
@@ -86,10 +88,12 @@ class UserTestAttemptController extends Controller
             );
         }
 
+        $attempt->setRelation('attemptQuestions', $this->getAttemptQuestions($attempt));
+
         return response()->json([
             'status_code' => Response::HTTP_OK,
             'message' => __('messages.common.fetched', ['entity' => __('messages.entities.user_test_attempt')]),
-            'data' => $attempt,
+            'data' => (new UserTestAttemptResource($attempt))->compact(),
         ]);
     }
 
@@ -113,7 +117,7 @@ class UserTestAttemptController extends Controller
             return response()->json([
                 'status_code' => Response::HTTP_OK,
                 'message' => __('messages.common.updated', ['entity' => __('messages.entities.user_test_attempt')]),
-                'data' => $updatedAttempt,
+                'data' => new UserTestAttemptResource($updatedAttempt),
             ]);
         } catch (\Exception $e) {
             return $this->handleException($e, __('messages.common.update_error', ['entity' => __('messages.entities.user_test_attempt')]));
@@ -265,7 +269,7 @@ class UserTestAttemptController extends Controller
         $attempt = UserTestAttempt::query()
             ->where('id', $id)
             ->where('user_id', $userId)
-            ->with('answers')
+            ->with(['collectionTest', 'answers'])
             ->first();
 
         if (!$attempt) {
@@ -279,11 +283,13 @@ class UserTestAttemptController extends Controller
             ? 0
             : $this->getRemainingSeconds($attempt);
 
+        $attempt->setRelation('attemptQuestions', $this->getAttemptQuestions($attempt));
+
         return response()->json([
             'status_code' => Response::HTTP_OK,
             'message' => __('messages.common.fetched', ['entity' => __('messages.entities.user_test_attempt')]),
             'data' => [
-                'attempt' => $attempt,
+                'attempt' => (new UserTestAttemptResource($attempt))->compact(),
                 'remaining_seconds' => $remainingSeconds,
             ],
         ]);
@@ -428,7 +434,7 @@ class UserTestAttemptController extends Controller
             'message' => $existing
                 ? __('messages.common.updated', ['entity' => __('messages.entities.user_test_answer')])
                 : __('messages.common.created', ['entity' => __('messages.entities.user_test_answer')]),
-            'data' => $answer,
+            'data' => new UserTestAnswerResource($answer),
         ], $existing ? Response::HTTP_OK : Response::HTTP_CREATED);
     }
 
@@ -468,7 +474,7 @@ class UserTestAttemptController extends Controller
         return response()->json([
             'status_code' => Response::HTTP_OK,
             'message' => __('messages.common.updated', ['entity' => __('messages.entities.user_test_attempt')]),
-            'data' => $attempt,
+            'data' => new UserTestAttemptResource($attempt),
         ]);
     }
 
@@ -486,6 +492,38 @@ class UserTestAttemptController extends Controller
         }
 
         return ((int) $hours * 3600) + ((int) $minutes * 60) + (int) $seconds;
+    }
+
+    private function getAttemptQuestions(UserTestAttempt $attempt)
+    {
+        $questionIds = is_array($attempt->question_ids) ? $attempt->question_ids : [];
+
+        if (empty($questionIds)) {
+            return collect();
+        }
+
+        $questions = Question::query()
+            ->with('questionType')
+            ->whereIn('id', $questionIds)
+            ->get()
+            ->keyBy('id');
+
+        $answersByQuestion = $attempt->answers->keyBy('question_id');
+
+        return collect($questionIds)
+            ->map(function ($questionId) use ($questions, $answersByQuestion) {
+                $question = $questions->get((int) $questionId);
+
+                if (!$question) {
+                    return null;
+                }
+
+                $question->setRelation('attemptAnswer', $answersByQuestion->get((int) $questionId));
+
+                return $question;
+            })
+            ->filter()
+            ->values();
     }
 
     private function getRemainingSeconds($attempt): ?int
