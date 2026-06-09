@@ -29,7 +29,7 @@ class CollectionTestService
             ];
         }
 
-        return $this->collectionTestRepository->paginate($where, $orderBy, ['*'], [], $limit);
+        return $this->collectionTestRepository->paginate($where, $orderBy, ['*'], ['testType', 'collection'], $limit);
     }
 
     /**
@@ -41,7 +41,7 @@ class CollectionTestService
             return $this->collectionTestRepository->first(['id' => $id], [], ['*'], $with);
         }
 
-        return $this->collectionTestRepository->find($id);
+        return $this->collectionTestRepository->first(['id' => $id], [], ['*'], ['testType', 'collection', 'questions']);
     }
 
     /**
@@ -63,7 +63,7 @@ class CollectionTestService
                 $collectionTest->questions()->sync($questionIds);
             }
 
-            return $collectionTest;
+            return $collectionTest->load(['testType', 'collection', 'questions']);
         });
     }
 
@@ -87,7 +87,7 @@ class CollectionTestService
                 $updatedCollectionTest->questions()->sync($questionIds ?? []);
             }
 
-            return $updatedCollectionTest;
+            return $updatedCollectionTest->load(['testType', 'collection', 'questions']);
         });
     }
 

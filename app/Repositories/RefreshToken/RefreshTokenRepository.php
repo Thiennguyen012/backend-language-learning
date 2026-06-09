@@ -38,6 +38,13 @@ class RefreshTokenRepository extends BaseRepository implements RefreshTokenInter
             ->update(['is_revoked' => true]);
     }
 
+    public function markAsUsed(int $id)
+    {
+        return $this->model
+            ->where('id', $id)
+            ->update(['last_used_at' => Carbon::now()]);
+    }
+
     public function deleteExpiredTokens()
     {
         return $this->model

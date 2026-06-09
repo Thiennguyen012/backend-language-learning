@@ -73,8 +73,7 @@ class UserAuthService
 
         $user = $refreshToken->user;
 
-        $refreshToken->last_used_at = now();
-        $refreshToken->save();
+        $this->refreshTokenRepository->markAsUsed($refreshToken->id);
 
         $accessToken = $user->createToken(
             'access_token',
@@ -85,8 +84,10 @@ class UserAuthService
         return [
             'user' => $user,
             'access_token' => $accessToken,
+            'refresh_token' => $refreshTokenString,
             'token_type' => 'Bearer',
             'access_token_expires_in' => self::ACCESS_TOKEN_EXPIRATION * 60,
+            'refresh_token_expires_in' => self::REFRESH_TOKEN_EXPIRATION * 24 * 60 * 60,
         ];
     }
 

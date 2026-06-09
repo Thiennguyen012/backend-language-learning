@@ -6,6 +6,7 @@ use App\CPU\Helpers;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\CollectionTest\StoreCollectionTestRequest;
 use App\Http\Requests\CollectionTest\UpdateCollectionTestRequest;
+use App\Http\Resources\CollectionTestResource;
 use App\Services\CollectionTest\CollectionTestService;
 use App\Traits\ValidatesRequestData;
 use Illuminate\Http\JsonResponse;
@@ -37,7 +38,7 @@ class CollectionTestController extends Controller
         return response()->json([
             'status_code' => Response::HTTP_OK,
             'message' => __('messages.common.list', ['entity' => __('messages.entities.collection_test')]),
-            'data' => $collectionTests->items(),
+            'data' => CollectionTestResource::collection($collectionTests->getCollection()),
             'meta' => [
                 'current_page' => $collectionTests->currentPage(),
                 'last_page' => $collectionTests->lastPage(),
@@ -58,7 +59,7 @@ class CollectionTestController extends Controller
             return response()->json([
                 'status_code' => Response::HTTP_CREATED,
                 'message' => __('messages.common.created', ['entity' => __('messages.entities.collection_test')]),
-                'data' => $collectionTest,
+                'data' => new CollectionTestResource($collectionTest),
             ], Response::HTTP_CREATED);
         } catch (\Exception $e) {
             return $this->handleException($e, __('messages.common.create_error', ['entity' => __('messages.entities.collection_test')]));
@@ -79,12 +80,10 @@ class CollectionTestController extends Controller
             );
         }
 
-        $collectionTest->setAppends([]);
-
         return response()->json([
             'status_code' => Response::HTTP_OK,
             'message' => __('messages.common.fetched', ['entity' => __('messages.entities.collection_test')]),
-            'data' => $collectionTest,
+            'data' => new CollectionTestResource($collectionTest),
         ]);
     }
 
@@ -108,7 +107,7 @@ class CollectionTestController extends Controller
             return response()->json([
                 'status_code' => Response::HTTP_OK,
                 'message' => __('messages.common.updated', ['entity' => __('messages.entities.collection_test')]),
-                'data' => $updatedCollectionTest,
+                'data' => new CollectionTestResource($updatedCollectionTest),
             ]);
         } catch (\Exception $e) {
             return $this->handleException($e, __('messages.common.update_error', ['entity' => __('messages.entities.collection_test')]));

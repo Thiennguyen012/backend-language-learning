@@ -60,8 +60,10 @@ class AuthController extends Controller
             'data' => [
                 'user' => $result['user'],
                 'access_token' => $result['access_token'],
+                'refresh_token' => $result['refresh_token'],
                 'token_type' => $result['token_type'],
                 'access_token_expires_in' => $result['access_token_expires_in'],
+                'refresh_token_expires_in' => $result['refresh_token_expires_in'],
             ]
         ]);
     }

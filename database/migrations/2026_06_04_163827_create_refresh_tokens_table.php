@@ -15,11 +15,11 @@ return new class extends Migration
             $table->id();
             $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
             $table->string('token', 512)->unique();
-            $table->timestamp('expires_at');
+            $table->dateTime('expires_at');
             $table->string('device_name')->nullable();
             $table->string('ip_address', 45)->nullable();
             $table->text('user_agent')->nullable();
-            $table->timestamp('last_used_at')->nullable();
+            $table->dateTime('last_used_at')->nullable();
             $table->boolean('is_revoked')->default(false);
             $table->timestamps();
 
