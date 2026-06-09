@@ -4,9 +4,10 @@ namespace App\Http\Controllers\Api\Permission;
 
 use App\Http\Controllers\Controller;
 use App\CPU\Helpers;
+use App\Http\Requests\Permission\StorePermissionRequest;
+use App\Http\Requests\Permission\UpdatePermissionRequest;
 use App\Http\Resources\PermissionResource;
 use App\Models\Permission\Permission;
-use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Http\JsonResponse;
 
@@ -32,12 +33,9 @@ class PermissionController extends Controller
         ]);
     }
 
-    public function store(Request $request): JsonResponse
+    public function store(StorePermissionRequest $request): JsonResponse
     {
-        $data = $request->validate([
-            'permission_name' => ['required', 'string', 'max:255'],
-            'descriptions' => ['nullable', 'string'],
-        ]);
+        $data = $request->validated();
 
         $permission = Permission::create($data);
 
@@ -56,12 +54,9 @@ class PermissionController extends Controller
         ]);
     }
 
-    public function update(Request $request, Permission $permission): JsonResponse
+    public function update(UpdatePermissionRequest $request, Permission $permission): JsonResponse
     {
-        $data = $request->validate([
-            'permission_name' => ['sometimes', 'required', 'string', 'max:255'],
-            'descriptions' => ['nullable', 'string'],
-        ]);
+        $data = $request->validated();
 
         $permission->update($data);
 

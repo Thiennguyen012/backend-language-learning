@@ -4,9 +4,10 @@ namespace App\Http\Controllers\Api\Role;
 
 use App\Http\Controllers\Controller;
 use App\CPU\Helpers;
+use App\Http\Requests\Role\StoreRoleRequest;
+use App\Http\Requests\Role\UpdateRoleRequest;
 use App\Http\Resources\RoleResource;
 use App\Models\Role\Role;
-use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Http\JsonResponse;
 
@@ -32,14 +33,9 @@ class RoleController extends Controller
         ]);
     }
 
-    public function store(Request $request): JsonResponse
+    public function store(StoreRoleRequest $request): JsonResponse
     {
-        $data = $request->validate([
-            'role_name' => ['required', 'string', 'max:255'],
-            'descriptions' => ['nullable', 'string'],
-            'permission_ids' => ['nullable', 'array'],
-            'permission_ids.*' => ['integer', 'exists:permissions,id'],
-        ]);
+        $data = $request->validated();
 
         $role = Role::create([
             'role_name' => $data['role_name'],
@@ -65,14 +61,9 @@ class RoleController extends Controller
         ]);
     }
 
-    public function update(Request $request, Role $role): JsonResponse
+    public function update(UpdateRoleRequest $request, Role $role): JsonResponse
     {
-        $data = $request->validate([
-            'role_name' => ['sometimes', 'required', 'string', 'max:255'],
-            'descriptions' => ['nullable', 'string'],
-            'permission_ids' => ['nullable', 'array'],
-            'permission_ids.*' => ['integer', 'exists:permissions,id'],
-        ]);
+        $data = $request->validated();
 
         $role->update([
             'role_name' => $data['role_name'] ?? $role->role_name,

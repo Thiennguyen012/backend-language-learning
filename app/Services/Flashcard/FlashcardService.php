@@ -29,7 +29,7 @@ class FlashcardService
             ];
         }
 
-        return $this->flashcardRepository->get($where, $orderBy, ['*']);
+        return $this->flashcardRepository->get($where, $orderBy, ['*'], ['wordType']);
     }
 
     /**
@@ -47,7 +47,7 @@ class FlashcardService
             ];
         }
 
-        return $this->flashcardRepository->paginate($where, $orderBy, ['*'], [], $limit);
+        return $this->flashcardRepository->paginate($where, $orderBy, ['*'], ['wordType'], $limit);
     }
 
     /**
@@ -55,7 +55,7 @@ class FlashcardService
      */
     public function find($id)
     {
-        return $this->flashcardRepository->find($id);
+        return $this->flashcardRepository->first(['id' => $id], [], ['*'], ['wordType']);
     }
 
     /**
@@ -63,7 +63,7 @@ class FlashcardService
      */
     public function create($data)
     {
-        return $this->flashcardRepository->create($data);
+        return $this->flashcardRepository->create($data)->load('wordType');
     }
 
     /**
@@ -71,7 +71,7 @@ class FlashcardService
      */
     public function update($model, $data)
     {
-        return $this->flashcardRepository->edit($model, $data);
+        return $this->flashcardRepository->edit($model, $data)->load('wordType');
     }
 
     /**

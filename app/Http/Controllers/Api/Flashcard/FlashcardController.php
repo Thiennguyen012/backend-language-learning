@@ -6,6 +6,7 @@ use App\CPU\Helpers;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Flashcard\StoreFlashcardRequest;
 use App\Http\Requests\Flashcard\UpdateFlashcardRequest;
+use App\Http\Resources\FlashcardResource;
 use App\Services\Flashcard\FlashcardService;
 use App\Traits\ValidatesRequestData;
 use Illuminate\Http\Response;
@@ -37,7 +38,7 @@ class FlashcardController extends Controller
         return response()->json([
             'status_code' => Response::HTTP_OK,
             'message' => __('messages.common.list', ['entity' => __('messages.entities.flashcard')]),
-            'data' => $flashcards->items(),
+            'data' => FlashcardResource::collection($flashcards->getCollection()),
             'meta' => [
                 'current_page' => $flashcards->currentPage(),
                 'last_page' => $flashcards->lastPage(),
@@ -58,7 +59,7 @@ class FlashcardController extends Controller
             return response()->json([
                 'status_code' => Response::HTTP_CREATED,
                 'message' => __('messages.common.created', ['entity' => __('messages.entities.flashcard')]),
-                'data' => $flashcard,
+                'data' => new FlashcardResource($flashcard),
             ], Response::HTTP_CREATED);
         } catch (\Exception $e) {
             return $this->handleException($e, __('messages.common.create_error', ['entity' => __('messages.entities.flashcard')]));
@@ -82,7 +83,7 @@ class FlashcardController extends Controller
         return response()->json([
             'status_code' => Response::HTTP_OK,
             'message' => __('messages.common.fetched', ['entity' => __('messages.entities.flashcard')]),
-            'data' => $flashcard,
+            'data' => new FlashcardResource($flashcard),
         ]);
     }
 
@@ -106,7 +107,7 @@ class FlashcardController extends Controller
             return response()->json([
                 'status_code' => Response::HTTP_OK,
                 'message' => __('messages.common.updated', ['entity' => __('messages.entities.flashcard')]),
-                'data' => $updatedFlashcard,
+                'data' => new FlashcardResource($updatedFlashcard),
             ]);
         } catch (\Exception $e) {
             return $this->handleException($e, __('messages.common.update_error', ['entity' => __('messages.entities.flashcard')]));
