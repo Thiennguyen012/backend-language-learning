@@ -6,6 +6,7 @@ use App\CPU\Helpers;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\TestType\StoreTestTypeRequest;
 use App\Http\Requests\TestType\UpdateTestTypeRequest;
+use App\Http\Resources\TestTypeResource;
 use App\Services\TestType\TestTypeService;
 use App\Traits\ValidatesRequestData;
 use Illuminate\Http\JsonResponse;
@@ -37,7 +38,7 @@ class TestTypeController extends Controller
         return response()->json([
             'status_code' => Response::HTTP_OK,
             'message' => __('messages.common.list', ['entity' => __('messages.entities.test_type')]),
-            'data' => $testTypes->items(),
+            'data' => TestTypeResource::collection($testTypes->getCollection()),
             'meta' => [
                 'current_page' => $testTypes->currentPage(),
                 'last_page' => $testTypes->lastPage(),
@@ -58,7 +59,7 @@ class TestTypeController extends Controller
             return response()->json([
                 'status_code' => Response::HTTP_CREATED,
                 'message' => __('messages.common.created', ['entity' => __('messages.entities.test_type')]),
-                'data' => $testType,
+                'data' => new TestTypeResource($testType),
             ], Response::HTTP_CREATED);
         } catch (\Exception $e) {
             return $this->handleException($e, __('messages.common.create_error', ['entity' => __('messages.entities.test_type')]));
@@ -82,7 +83,7 @@ class TestTypeController extends Controller
         return response()->json([
             'status_code' => Response::HTTP_OK,
             'message' => __('messages.common.fetched', ['entity' => __('messages.entities.test_type')]),
-            'data' => $testType,
+            'data' => new TestTypeResource($testType),
         ]);
     }
 
@@ -106,7 +107,7 @@ class TestTypeController extends Controller
             return response()->json([
                 'status_code' => Response::HTTP_OK,
                 'message' => __('messages.common.updated', ['entity' => __('messages.entities.test_type')]),
-                'data' => $updatedTestType,
+                'data' => new TestTypeResource($updatedTestType),
             ]);
         } catch (\Exception $e) {
             return $this->handleException($e, __('messages.common.update_error', ['entity' => __('messages.entities.test_type')]));

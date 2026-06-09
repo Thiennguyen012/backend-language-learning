@@ -59,7 +59,7 @@ class FlashcardCollectionService
             return $this->flashcardCollectionRepository->first(['id' => $id], [], ['*'], $with);
         }
 
-        return $this->flashcardCollectionRepository->find($id);
+        return $this->flashcardCollectionRepository->first(['id' => $id], [], ['*'], ['flashcards']);
     }
 
     /**
@@ -67,7 +67,7 @@ class FlashcardCollectionService
      */
     public function create($data)
     {
-        return $this->flashcardCollectionRepository->create($data);
+        return $this->flashcardCollectionRepository->create($data)->load('flashcards');
     }
 
     /**
@@ -75,7 +75,7 @@ class FlashcardCollectionService
      */
     public function update($collection, $data)
     {
-        return $this->flashcardCollectionRepository->edit($collection, $data);
+        return $this->flashcardCollectionRepository->edit($collection, $data)->load('flashcards');
     }
 
     /**

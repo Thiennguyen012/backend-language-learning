@@ -6,6 +6,7 @@ use App\CPU\Helpers;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\FlashcardCollection\StoreFlashcardCollectionRequest;
 use App\Http\Requests\FlashcardCollection\UpdateFlashcardCollectionRequest;
+use App\Http\Resources\FlashcardCollectionResource;
 use App\Models\FlashcardCollection\FlashcardCollection;
 use App\Services\FlashcardCollection\FlashcardCollectionService;
 use App\Traits\ValidatesRequestData;
@@ -38,7 +39,7 @@ class FlashcardCollectionController extends Controller
         return response()->json([
             'status_code' => Response::HTTP_OK,
             'message' => __('messages.common.list', ['entity' => __('messages.entities.flashcard_collection')]),
-            'data' => $collections->items(),
+            'data' => FlashcardCollectionResource::collection($collections->getCollection()),
             'meta' => [
                 'current_page' => $collections->currentPage(),
                 'last_page' => $collections->lastPage(),
@@ -59,7 +60,7 @@ class FlashcardCollectionController extends Controller
             return response()->json([
                 'status_code' => Response::HTTP_CREATED,
                 'message' => __('messages.common.created', ['entity' => __('messages.entities.flashcard_collection')]),
-                'data' => $collection,
+                'data' => new FlashcardCollectionResource($collection),
             ], Response::HTTP_CREATED);
         } catch (\Exception $e) {
             return $this->handleException($e, __('messages.common.create_error', ['entity' => __('messages.entities.flashcard_collection')]));
@@ -83,7 +84,7 @@ class FlashcardCollectionController extends Controller
         return response()->json([
             'status_code' => Response::HTTP_OK,
             'message' => __('messages.common.fetched', ['entity' => __('messages.entities.flashcard_collection')]),
-            'data' => $collection,
+            'data' => new FlashcardCollectionResource($collection),
         ]);
     }
 
@@ -107,7 +108,7 @@ class FlashcardCollectionController extends Controller
             return response()->json([
                 'status_code' => Response::HTTP_OK,
                 'message' => __('messages.common.updated', ['entity' => __('messages.entities.flashcard_collection')]),
-                'data' => $updatedCollection,
+                'data' => new FlashcardCollectionResource($updatedCollection),
             ]);
         } catch (\Exception $e) {
             return $this->handleException($e, __('messages.common.update_error', ['entity' => __('messages.entities.flashcard_collection')]));

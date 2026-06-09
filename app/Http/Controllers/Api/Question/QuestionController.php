@@ -6,6 +6,7 @@ use App\CPU\Helpers;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Question\StoreQuestionRequest;
 use App\Http\Requests\Question\UpdateQuestionRequest;
+use App\Http\Resources\QuestionResource;
 use App\Services\Question\QuestionService;
 use App\Traits\ValidatesRequestData;
 use Illuminate\Http\JsonResponse;
@@ -37,7 +38,7 @@ class QuestionController extends Controller
         return response()->json([
             'status_code' => Response::HTTP_OK,
             'message' => __('messages.common.list', ['entity' => __('messages.entities.question')]),
-            'data' => $questions->items(),
+            'data' => QuestionResource::collection($questions->getCollection()),
             'meta' => [
                 'current_page' => $questions->currentPage(),
                 'last_page' => $questions->lastPage(),
@@ -58,7 +59,7 @@ class QuestionController extends Controller
             return response()->json([
                 'status_code' => Response::HTTP_CREATED,
                 'message' => __('messages.common.created', ['entity' => __('messages.entities.question')]),
-                'data' => $question,
+                'data' => new QuestionResource($question),
             ], Response::HTTP_CREATED, [], JSON_UNESCAPED_UNICODE);
         } catch (\Exception $e) {
             return $this->handleException($e, __('messages.common.create_error', ['entity' => __('messages.entities.question')]));
@@ -82,7 +83,7 @@ class QuestionController extends Controller
         return response()->json([
             'status_code' => Response::HTTP_OK,
             'message' => __('messages.common.fetched', ['entity' => __('messages.entities.question')]),
-            'data' => $question,
+            'data' => new QuestionResource($question),
         ], Response::HTTP_OK, [], JSON_UNESCAPED_UNICODE);
     }
 
@@ -106,7 +107,7 @@ class QuestionController extends Controller
             return response()->json([
                 'status_code' => Response::HTTP_OK,
                 'message' => __('messages.common.updated', ['entity' => __('messages.entities.question')]),
-                'data' => $updatedQuestion,
+                'data' => new QuestionResource($updatedQuestion),
             ], Response::HTTP_OK, [], JSON_UNESCAPED_UNICODE);
         } catch (\Exception $e) {
             return $this->handleException($e, __('messages.common.update_error', ['entity' => __('messages.entities.question')]));

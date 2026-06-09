@@ -29,7 +29,7 @@ class QuestionService
             ];
         }
 
-        return $this->questionRepository->paginate($where, $orderBy, ['*'], [], $limit);
+        return $this->questionRepository->paginate($where, $orderBy, ['*'], ['questionType'], $limit);
     }
 
     /**
@@ -41,7 +41,7 @@ class QuestionService
             return $this->questionRepository->first(['id' => $id], [], ['*'], $with);
         }
 
-        return $this->questionRepository->find($id);
+        return $this->questionRepository->first(['id' => $id], [], ['*'], ['questionType']);
     }
 
     /**
@@ -53,7 +53,7 @@ class QuestionService
             $data['question_data'] = json_encode($data['question_data']);
         }
 
-        return $this->questionRepository->create($data);
+        return $this->questionRepository->create($data)->load('questionType');
     }
 
     /**
@@ -65,7 +65,7 @@ class QuestionService
             $data['question_data'] = json_encode($data['question_data']);
         }
 
-        return $this->questionRepository->edit($question, $data);
+        return $this->questionRepository->edit($question, $data)->load('questionType');
     }
 
     /**
