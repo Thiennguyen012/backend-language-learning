@@ -40,7 +40,7 @@ class UpdateProfileRequest extends FormRequest
             ],
             'birthday' => 'sometimes|date|before:today',
             'address' => 'sometimes|string|max:256',
-            'avatar' => 'sometimes|string',
+            'avatar' => 'sometimes|image|mimes:jpg,jpeg,png,webp|max:2048',
             'password' => 'sometimes|string|min:6|confirmed',
         ];
     }

@@ -131,6 +131,10 @@ class AuthController extends Controller
     {
         $data = $request->validated();
 
+        if ($request->hasFile('avatar')) {
+            $data['avatar'] = $request->file('avatar');
+        }
+
         $updatedUser = $this->authService->update($request->user(), $data);
 
         return response()->json([

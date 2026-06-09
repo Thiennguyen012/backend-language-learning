@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api\User;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\User\StoreUserRequest;
 use App\Http\Requests\User\UpdateUserRequest;
+use App\Http\Resources\UserResource;
 use App\Services\User\UserService;
 use App\Traits\ValidatesRequestData;
 use App\CPU\Helpers;
@@ -33,18 +34,11 @@ class UserController extends Controller
 
         $users = $this->userService->paginate($perPage, $search);
         $users->getCollection()->load('roles');
-        $data = $users->getCollection()->map(function ($user) {
-            $payload = $user->toArray();
-            $payload['role_ids'] = $user->roles->pluck('id')->values()->all();
-            unset($payload['roles']);
-
-            return $payload;
-        });
 
         return response()->json([
             'status_code' => Response::HTTP_OK,
             'message' => __('messages.common.list', ['entity' => __('messages.entities.user')]),
-            'data' => $data,
+            'data' => UserResource::collection($users->getCollection()),
             'meta' => [
                 'current_page' => $users->currentPage(),
                 'last_page' => $users->lastPage(),
@@ -60,12 +54,18 @@ class UserController extends Controller
     public function store(StoreUserRequest $request): JsonResponse
     {
         try {
-            $user = $this->userService->create($request->validated());
+            $data = $request->validated();
+
+            if ($request->hasFile('avatar')) {
+                $data['avatar'] = $request->file('avatar');
+            }
+
+            $user = $this->userService->create($data);
 
             return response()->json([
                 'status_code' => Response::HTTP_CREATED,
                 'message' => __('messages.common.created', ['entity' => __('messages.entities.user')]),
-                'data' => $user,
+                'data' => new UserResource($user),
             ], Response::HTTP_CREATED);
         } catch (\Exception $e) {
             return $this->handleException($e, __('messages.common.create_error', ['entity' => __('messages.entities.user')]));
@@ -89,10 +89,7 @@ class UserController extends Controller
         return response()->json([
             'status_code' => Response::HTTP_OK,
             'message' => __('messages.common.fetched', ['entity' => __('messages.entities.user')]),
-            'data' => [
-                ...$user->toArray(),
-                'role_ids' => $user->roles()->pluck('roles.id')->values()->all(),
-            ],
+            'data' => new UserResource($user),
         ]);
     }
 
@@ -112,6 +109,10 @@ class UserController extends Controller
             }
 
             $data = $request->validated();
+            if ($request->hasFile('avatar')) {
+                $data['avatar'] = $request->file('avatar');
+            }
+
             $roleIds = $data['role_ids'] ?? null;
             unset($data['role_ids']);
 
@@ -124,10 +125,7 @@ class UserController extends Controller
             return response()->json([
                 'status_code' => Response::HTTP_OK,
                 'message' => __('messages.common.updated', ['entity' => __('messages.entities.user')]),
-                'data' => [
-                    ...$updatedUser->toArray(),
-                    'role_ids' => $updatedUser->roles()->pluck('roles.id')->values()->all(),
-                ],
+                'data' => new UserResource($updatedUser),
             ]);
         } catch (\Exception $e) {
             return $this->handleException($e, __('messages.common.update_error', ['entity' => __('messages.entities.user')]));

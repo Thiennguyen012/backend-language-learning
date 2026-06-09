@@ -3,15 +3,20 @@
 namespace App\Services\User;
 
 use App\Repositories\User\UserInterface;
+use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Hash;
 
 class UserService
 {
     protected $userRepository;
+    protected $userAvatarService;
 
-    public function __construct(UserInterface $userRepository)
-    {
+    public function __construct(
+        UserInterface $userRepository,
+        UserAvatarService $userAvatarService
+    ) {
         $this->userRepository = $userRepository;
+        $this->userAvatarService = $userAvatarService;
     }
 
     public function getAll($search = '')
@@ -62,29 +67,37 @@ class UserService
 
     public function create($data)
     {
-        // Xóa password_confirmation không cần thiết
-        unset($data['password_confirmation']);
+        $avatar = $data['avatar'] ?? null;
+        unset($data['avatar'], $data['password_confirmation']);
 
-        // Hash password
         $data['password'] = Hash::make($data['password']);
 
-        // Tạo user
-        return $this->userRepository->create($data);
+        $user = $this->userRepository->create($data);
+
+        if ($avatar instanceof UploadedFile) {
+            $user = $this->userRepository->edit($user, [
+                'avatar' => $this->userAvatarService->store($user, $avatar),
+            ]);
+        }
+
+        return $user;
     }
 
     public function update($user, $data)
     {
-        // Xóa password_confirmation nếu có
-        unset($data['password_confirmation']);
+        $avatar = $data['avatar'] ?? null;
+        unset($data['avatar'], $data['password_confirmation']);
 
-        // Hash password nếu có
         if (isset($data['password']) && !empty($data['password'])) {
             $data['password'] = Hash::make($data['password']);
         } else {
             unset($data['password']);
         }
 
-        // Cập nhật user
+        if ($avatar instanceof UploadedFile) {
+            $data['avatar'] = $this->userAvatarService->store($user, $avatar);
+        }
+
         return $this->userRepository->edit($user, $data);
     }
 

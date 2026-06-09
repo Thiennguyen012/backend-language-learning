@@ -28,7 +28,7 @@ class StoreUserRequest extends FormRequest
             'password' => 'required|string|min:6',
             'birthday' => 'nullable|date',
             'address' => 'nullable|string|max:256',
-            'avatar' => 'nullable|string',
+            'avatar' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
             'status' => 'nullable|integer',
             'is_super_admin' => 'nullable|boolean',
         ];

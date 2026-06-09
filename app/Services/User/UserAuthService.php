@@ -5,6 +5,7 @@ namespace App\Services\User;
 use App\Repositories\RefreshToken\RefreshTokenInterface;
 use App\Repositories\User\UserInterface;
 use Carbon\Carbon;
+use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
@@ -13,16 +14,19 @@ class UserAuthService
 {
     protected $userRepository;
     protected $refreshTokenRepository;
+    protected $userAvatarService;
 
     const ACCESS_TOKEN_EXPIRATION = 15; // minutes
     const REFRESH_TOKEN_EXPIRATION = 7; // days
 
     public function __construct(
         UserInterface $userRepository,
-        RefreshTokenInterface $refreshTokenRepository
+        RefreshTokenInterface $refreshTokenRepository,
+        UserAvatarService $userAvatarService
     ) {
         $this->userRepository = $userRepository;
         $this->refreshTokenRepository = $refreshTokenRepository;
+        $this->userAvatarService = $userAvatarService;
     }
 
     public function login(array $credentials, array $deviceInfo = [])
@@ -116,12 +120,17 @@ class UserAuthService
 
     public function update($user, $data)
     {
-        unset($data['password_confirmation']);
+        $avatar = $data['avatar'] ?? null;
+        unset($data['avatar'], $data['password_confirmation']);
 
         if (isset($data['password']) && !empty($data['password'])) {
             $data['password'] = Hash::make($data['password']);
         } else {
             unset($data['password']);
+        }
+
+        if ($avatar instanceof UploadedFile) {
+            $data['avatar'] = $this->userAvatarService->store($user, $avatar);
         }
 
         return $this->userRepository->edit($user, $data);

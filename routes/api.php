@@ -32,7 +32,7 @@ Route::prefix('admin')->group(function () {
             Route::post('/logout-device', [AuthController::class, 'logoutFromDevice']);
             Route::post('/logout-all', [AuthController::class, 'logoutFromAllDevices']);
             Route::get('/me', [AuthController::class, 'me']);
-            Route::put('/profile', [AuthController::class, 'updateProfile']);
+            Route::match(['put', 'post'], '/profile', [AuthController::class, 'updateProfile']);
         });
     });
 
@@ -41,7 +41,7 @@ Route::prefix('admin')->group(function () {
             Route::get('/', [UserController::class, 'index'])->middleware('permission:user.view');
             Route::post('/', [UserController::class, 'store'])->middleware('permission:user.create');
             Route::get('/{id}', [UserController::class, 'show'])->middleware('permission:user.view');
-            Route::put('/{id}', [UserController::class, 'update'])->middleware('permission:user.update');
+            Route::match(['put', 'post'], '/{id}', [UserController::class, 'update'])->middleware('permission:user.update');
             Route::delete('/{id}', [UserController::class, 'destroy'])->middleware('permission:user.delete');
         });
 
