@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api\Permission;
 
 use App\Http\Controllers\Controller;
 use App\CPU\Helpers;
+use App\Http\Resources\PermissionResource;
 use App\Models\Permission\Permission;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -21,7 +22,7 @@ class PermissionController extends Controller
         return response()->json([
             'status_code' => Response::HTTP_OK,
             'message' => __('messages.success'),
-            'data' => $permissions->items(),
+            'data' => PermissionResource::collection($permissions->getCollection()),
             'meta' => [
                 'current_page' => $permissions->currentPage(),
                 'last_page' => $permissions->lastPage(),
@@ -43,7 +44,7 @@ class PermissionController extends Controller
         return response()->json([
             'status_code' => Response::HTTP_CREATED,
             'message' => __('messages.success'),
-            'data' => $permission,
+            'data' => new PermissionResource($permission),
         ], Response::HTTP_CREATED);
     }
 
@@ -51,7 +52,7 @@ class PermissionController extends Controller
     {
         return response()->json([
             'status_code' => Response::HTTP_OK,
-            'data' => $permission,
+            'data' => new PermissionResource($permission),
         ]);
     }
 
@@ -67,7 +68,7 @@ class PermissionController extends Controller
         return response()->json([
             'status_code' => Response::HTTP_OK,
             'message' => __('messages.success'),
-            'data' => $permission->fresh(),
+            'data' => new PermissionResource($permission->fresh()),
         ]);
     }
 

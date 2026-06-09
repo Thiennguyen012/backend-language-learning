@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api\Role;
 
 use App\Http\Controllers\Controller;
 use App\CPU\Helpers;
+use App\Http\Resources\RoleResource;
 use App\Models\Role\Role;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -21,7 +22,7 @@ class RoleController extends Controller
         return response()->json([
             'status_code' => Response::HTTP_OK,
             'message' => __('messages.success'),
-            'data' => $roles->items(),
+            'data' => RoleResource::collection($roles->getCollection()),
             'meta' => [
                 'current_page' => $roles->currentPage(),
                 'last_page' => $roles->lastPage(),
@@ -52,7 +53,7 @@ class RoleController extends Controller
         return response()->json([
             'status_code' => Response::HTTP_CREATED,
             'message' => __('messages.role_created'),
-            'data' => $role->load('permissions'),
+            'data' => new RoleResource($role->load('permissions')),
         ], Response::HTTP_CREATED);
     }
 
@@ -60,7 +61,7 @@ class RoleController extends Controller
     {
         return response()->json([
             'status_code' => Response::HTTP_OK,
-            'data' => $role->load('permissions'),
+            'data' => new RoleResource($role->load('permissions')),
         ]);
     }
 
@@ -87,7 +88,7 @@ class RoleController extends Controller
         return response()->json([
             'status_code' => Response::HTTP_OK,
             'message' => __('messages.role_updated'),
-            'data' => $role->load('permissions'),
+            'data' => new RoleResource($role->load('permissions')),
         ]);
     }
 
