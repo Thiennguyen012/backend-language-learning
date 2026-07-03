@@ -11,6 +11,8 @@ use App\Http\Controllers\Api\UserTestAttempt\UserTestAttemptController;
 use App\Http\Controllers\Api\UserTestAnswer\UserTestAnswerController;
 use App\Http\Controllers\Api\TestType\TestTypeController;
 use App\Http\Controllers\Api\Question\QuestionController;
+use App\Http\Controllers\Api\QuestionType\QuestionTypeController;
+use App\Http\Controllers\Api\WordType\WordTypeController;
 use Illuminate\Support\Facades\Route;
 
 // Test CORS endpoint
@@ -37,9 +39,14 @@ Route::prefix('admin')->group(function () {
     });
 
     Route::middleware('auth:sanctum')->group(function () {
+        Route::get('/my-attempts', [UserTestAttemptController::class, 'myAttempts']);
+        Route::get('/word-types', [WordTypeController::class, 'index']);
+        Route::get('/question-types', [QuestionTypeController::class, 'index']);
+
         Route::prefix('users')->group(function () {
             Route::get('/', [UserController::class, 'index'])->middleware('permission:user.view');
             Route::post('/', [UserController::class, 'store'])->middleware('permission:user.create');
+            Route::get('/{id}/test-attempts', [UserTestAttemptController::class, 'historyByUser'])->middleware('permission:user_test_attempt.view');
             Route::get('/{id}', [UserController::class, 'show'])->middleware('permission:user.view');
             Route::match(['put', 'post'], '/{id}', [UserController::class, 'update'])->middleware('permission:user.update');
             Route::delete('/{id}', [UserController::class, 'destroy'])->middleware('permission:user.delete');
@@ -62,6 +69,7 @@ Route::prefix('admin')->group(function () {
         });
 
         Route::prefix('flashcards')->group(function () {
+            Route::get('/', [FlashcardController::class, 'index'])->middleware('permission:flashcard.view');
             Route::post('/', [FlashcardController::class, 'store'])->middleware('permission:flashcard.create');
             Route::get('/{id}', [FlashcardController::class, 'show'])->middleware('permission:flashcard.view');
             Route::put('/{id}', [FlashcardController::class, 'update'])->middleware('permission:flashcard.update');

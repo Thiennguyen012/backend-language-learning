@@ -35,6 +35,17 @@ class UserTestAttemptService
         return $this->userTestAttemptRepository->paginate($where, $orderBy, ['*'], [], $limit);
     }
 
+    public function paginateByUser(int $userId, int $limit = Helpers::LIMIT_PER_PAGE)
+    {
+        return $this->userTestAttemptRepository->paginate(
+            ['user_id' => $userId],
+            ['created_at' => 'desc'],
+            ['*'],
+            ['collectionTest'],
+            $limit
+        );
+    }
+
     /**
      * Find user test attempt by ID
      */

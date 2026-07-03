@@ -19,6 +19,7 @@ class CollectionTestResource extends JsonResource
             'test_type_id' => $this->test_type_id,
             'collection_id' => $this->collection_id,
             'test_name' => $this->test_name,
+            'description' => $this->description,
             'total_questions' => $this->total_questions,
             'duration' => $this->duration,
             'status' => $this->status,

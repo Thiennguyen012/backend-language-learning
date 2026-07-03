@@ -20,6 +20,7 @@ class CollectionTest extends Model
         'test_type_id',
         'collection_id',
         'test_name',
+        'description',
         'total_questions',
         'duration',
         'status',

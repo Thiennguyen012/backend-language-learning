@@ -26,6 +26,7 @@ class CollectionTestService
         if ($search) {
             $where['orWhere'] = [
                 'test_name' => ['test_name', 'like', '%' . $search . '%'],
+                'description' => ['description', 'like', '%' . $search . '%'],
             ];
         }
 

@@ -8,7 +8,9 @@ use App\Jobs\AutoSubmitUserTestAttempt;
 use App\Http\Requests\UserTestAttempt\StoreUserTestAttemptRequest;
 use App\Http\Requests\UserTestAttempt\UpdateUserTestAttemptRequest;
 use App\Http\Resources\UserTestAnswerResource;
+use App\Http\Resources\UserTestAttemptHistoryResource;
 use App\Http\Resources\UserTestAttemptResource;
+use App\Models\User;
 use App\Models\CollectionTest\CollectionTest;
 use App\Models\Question\Question;
 use App\Models\UserTestAttempt\UserTestAttempt;
@@ -94,6 +96,53 @@ class UserTestAttemptController extends Controller
             'status_code' => Response::HTTP_OK,
             'message' => __('messages.common.fetched', ['entity' => __('messages.entities.user_test_attempt')]),
             'data' => (new UserTestAttemptResource($attempt))->compact(),
+        ]);
+    }
+
+    public function historyByUser(Request $request, string $userId): JsonResponse
+    {
+        $user = User::query()->find($userId);
+
+        if (!$user) {
+            return $this->errorResponse(
+                __('messages.common.not_found', ['entity' => __('messages.entities.user')]),
+                Response::HTTP_NOT_FOUND
+            );
+        }
+
+        $perPage = (int) $request->query('per_page', Helpers::LIMIT_PER_PAGE);
+        $perPage = $perPage > 0 ? min($perPage, Helpers::LIMIT_PER_PAGE) : Helpers::LIMIT_PER_PAGE;
+        $attempts = $this->userTestAttemptService->paginateByUser($user->id, $perPage);
+
+        return response()->json([
+            'status_code' => Response::HTTP_OK,
+            'message' => __('messages.common.list', ['entity' => __('messages.entities.user_test_attempt')]),
+            'data' => UserTestAttemptHistoryResource::collection($attempts->getCollection()),
+            'meta' => [
+                'current_page' => $attempts->currentPage(),
+                'last_page' => $attempts->lastPage(),
+                'per_page' => $attempts->perPage(),
+                'total' => $attempts->total(),
+            ],
+        ]);
+    }
+
+    public function myAttempts(Request $request): JsonResponse
+    {
+        $perPage = (int) $request->query('per_page', Helpers::LIMIT_PER_PAGE);
+        $perPage = $perPage > 0 ? min($perPage, Helpers::LIMIT_PER_PAGE) : Helpers::LIMIT_PER_PAGE;
+        $attempts = $this->userTestAttemptService->paginateByUser($request->user()->id, $perPage);
+
+        return response()->json([
+            'status_code' => Response::HTTP_OK,
+            'message' => __('messages.common.list', ['entity' => __('messages.entities.user_test_attempt')]),
+            'data' => UserTestAttemptHistoryResource::collection($attempts->getCollection()),
+            'meta' => [
+                'current_page' => $attempts->currentPage(),
+                'last_page' => $attempts->lastPage(),
+                'per_page' => $attempts->perPage(),
+                'total' => $attempts->total(),
+            ],
         ]);
     }
 

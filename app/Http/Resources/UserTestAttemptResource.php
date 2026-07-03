@@ -48,6 +48,7 @@ class UserTestAttemptResource extends JsonResource
                 return [
                     'id' => $this->collectionTest->id,
                     'test_name' => $this->collectionTest->test_name,
+                    'description' => $this->collectionTest->description,
                     'total_questions' => $this->collectionTest->total_questions,
                     'duration' => $this->collectionTest->duration,
                 ];

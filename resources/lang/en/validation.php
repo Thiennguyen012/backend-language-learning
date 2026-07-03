@@ -36,6 +36,7 @@ return [
             'test_type_id' => 'Test type',
             'collection_id' => 'Flashcard collection',
             'test_name' => 'Test name',
+            'description' => 'Description',
             'total_questions' => 'Total questions',
             'status' => 'Status',
             'started_at' => 'Start time',

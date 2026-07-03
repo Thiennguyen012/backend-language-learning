@@ -36,6 +36,7 @@ return [
             'test_type_id' => 'Loại bài kiểm tra',
             'collection_id' => 'Bộ flashcard',
             'test_name' => 'Tên bài kiểm tra',
+            'description' => 'Mô tả',
             'total_questions' => 'Tổng số câu hỏi',
             'status' => 'Trạng thái',
             'started_at' => 'Thời gian bắt đầu',
