@@ -3,6 +3,7 @@
 return [
     'success' => 'Success',
     'entities' => [
+        'role' => 'Role',
         'user' => 'User',
         'flashcard' => 'Flashcard',
         'flashcard_collection' => 'Flashcard collection',

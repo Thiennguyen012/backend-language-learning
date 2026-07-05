@@ -39,7 +39,7 @@ Route::prefix('admin')->group(function () {
     });
 
     Route::middleware('auth:sanctum')->group(function () {
-        Route::get('/my-attempts', [UserTestAttemptController::class, 'myAttempts']);
+        Route::get('/my-attempts', [UserTestAttemptController::class, 'myAttempts'])->middleware('permission:attempt.history');
         Route::get('/word-types', [WordTypeController::class, 'index']);
         Route::get('/question-types', [QuestionTypeController::class, 'index']);
 
@@ -94,7 +94,7 @@ Route::prefix('admin')->group(function () {
             Route::delete('/{id}', [CollectionTestController::class, 'destroy'])->middleware('permission:collection_test.delete');
         });
 
-        Route::post('/tests/{id}/start', [UserTestAttemptController::class, 'start']);
+        Route::post('/tests/{id}/start', [UserTestAttemptController::class, 'start'])->middleware('permission:attempt.do');
 
         Route::prefix('user-test-attempts')->group(function () {
             Route::get('/', [UserTestAttemptController::class, 'index'])->middleware('permission:user_test_attempt.view');
@@ -104,10 +104,10 @@ Route::prefix('admin')->group(function () {
             Route::delete('/{id}', [UserTestAttemptController::class, 'destroy'])->middleware('permission:user_test_attempt.delete');
         });
 
-        Route::get('/attempts/{id}', [UserTestAttemptController::class, 'remaining']);
-        Route::get('/attempts/{id}/questions', [UserTestAttemptController::class, 'questions']);
-        Route::post('/attempts/{id}/answers', [UserTestAttemptController::class, 'answer']);
-        Route::post('/attempts/{id}/submit', [UserTestAttemptController::class, 'submit']);
+        Route::get('/attempts/{id}', [UserTestAttemptController::class, 'remaining'])->middleware('permission:attempt.view');
+        Route::get('/attempts/{id}/questions', [UserTestAttemptController::class, 'questions'])->middleware('permission:attempt.view');
+        Route::post('/attempts/{id}/answers', [UserTestAttemptController::class, 'answer'])->middleware('permission:attempt.do');
+        Route::post('/attempts/{id}/submit', [UserTestAttemptController::class, 'submit'])->middleware('permission:attempt.do');
 
         Route::prefix('user-test-answers')->group(function () {
             Route::get('/', [UserTestAnswerController::class, 'index'])->middleware('permission:user_test_answer.view');

@@ -22,7 +22,7 @@ class RoleController extends Controller
 
         return response()->json([
             'status_code' => Response::HTTP_OK,
-            'message' => __('messages.success'),
+            'message' => __('messages.common.list', ['entity' => __('messages.entities.role')]),
             'data' => RoleResource::collection($roles->getCollection()),
             'meta' => [
                 'current_page' => $roles->currentPage(),
@@ -48,7 +48,7 @@ class RoleController extends Controller
 
         return response()->json([
             'status_code' => Response::HTTP_CREATED,
-            'message' => __('messages.role_created'),
+            'message' => __('messages.common.created', ['entity' => __('messages.entities.role')]),
             'data' => new RoleResource($role->load('permissions')),
         ], Response::HTTP_CREATED);
     }
@@ -57,6 +57,7 @@ class RoleController extends Controller
     {
         return response()->json([
             'status_code' => Response::HTTP_OK,
+            'message' => __('messages.common.fetched', ['entity' => __('messages.entities.role')]),
             'data' => new RoleResource($role->load('permissions')),
         ]);
     }
@@ -78,7 +79,7 @@ class RoleController extends Controller
 
         return response()->json([
             'status_code' => Response::HTTP_OK,
-            'message' => __('messages.role_updated'),
+            'message' => __('messages.common.updated', ['entity' => __('messages.entities.role')]),
             'data' => new RoleResource($role->load('permissions')),
         ]);
     }
@@ -90,7 +91,7 @@ class RoleController extends Controller
 
         return response()->json([
             'status_code' => Response::HTTP_OK,
-            'message' => __('messages.role_deleted'),
+            'message' => __('messages.common.deleted', ['entity' => __('messages.entities.role')]),
         ]);
     }
 }

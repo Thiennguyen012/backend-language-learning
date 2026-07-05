@@ -3,6 +3,7 @@
 return [
     'success' => 'Thành công',
     'entities' => [
+        'role' => 'Vai trò',
         'user' => 'Người dùng',
         'flashcard' => 'Flashcard',
         'flashcard_collection' => 'Bộ flashcard',
