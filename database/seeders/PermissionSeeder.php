@@ -36,6 +36,10 @@ class PermissionSeeder extends Seeder
             'history' => 'View own attempt history',
         ]));
 
+        $permissions = array_merge($permissions, $this->generateActionPermissions('admin_dashboard', [
+            'view' => 'View admin dashboard',
+        ]));
+
         foreach ($permissions as $permissionName => $description) {
             Permission::updateOrCreate(
                 ['permission_name' => $permissionName],
@@ -43,7 +47,6 @@ class PermissionSeeder extends Seeder
             );
         }
 
-        $this->replaceDeprecatedAttemptPermissions();
     }
 
     private function generateCrudPermissions(string $module, string $label): array
@@ -67,33 +70,4 @@ class PermissionSeeder extends Seeder
         return $permissions;
     }
 
-    private function replaceDeprecatedAttemptPermissions(): void
-    {
-        $deprecatedPermissions = Permission::query()
-            ->with('roles:id')
-            ->whereIn('permission_name', [
-                'attempt.start',
-                'attempt.answer',
-                'attempt.submit',
-            ])
-            ->get();
-
-        $roleIds = $deprecatedPermissions
-            ->flatMap(fn (Permission $permission) => $permission->roles->pluck('id'))
-            ->unique()
-            ->values()
-            ->all();
-
-        $attemptPermission = Permission::query()
-            ->where('permission_name', 'attempt.do')
-            ->firstOrFail();
-
-        if (!empty($roleIds)) {
-            $attemptPermission->roles()->syncWithoutDetaching($roleIds);
-        }
-
-        foreach ($deprecatedPermissions as $permission) {
-            $permission->delete();
-        }
-    }
 }
