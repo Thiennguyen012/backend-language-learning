@@ -28,6 +28,7 @@ return [
         'flashcard' => [
             'original_word' => 'Từ gốc',
             'translated_word' => 'Bản dịch từ',
+            'explanation' => 'Giải thích',
             'word_type_id' => 'Loại từ',
         ],
         'flashcard_collection' => [

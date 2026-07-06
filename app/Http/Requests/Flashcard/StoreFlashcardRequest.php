@@ -24,6 +24,7 @@ class StoreFlashcardRequest extends FormRequest
         return [
             'original_word' => 'required|string|max:255',
             'translated_word' => 'required|string|max:255',
+            'explanation' => 'nullable|string',
             'word_type_id' => 'required|integer|exists:word_type,id',
         ];
     }
@@ -50,6 +51,7 @@ class StoreFlashcardRequest extends FormRequest
         return [
             'original_word' => __('validation.attributes.flashcard.original_word'),
             'translated_word' => __('validation.attributes.flashcard.translated_word'),
+            'explanation' => __('validation.attributes.flashcard.explanation'),
             'word_type_id' => __('validation.attributes.flashcard.word_type_id'),
         ];
     }

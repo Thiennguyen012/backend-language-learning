@@ -18,6 +18,7 @@ class Flashcard extends Model
     protected $fillable = [
         'original_word',
         'translated_word',
+        'explanation',
         'word_type_id',
     ];
 

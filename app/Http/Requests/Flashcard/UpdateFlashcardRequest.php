@@ -24,6 +24,7 @@ class UpdateFlashcardRequest extends FormRequest
         return [
             'original_word' => 'sometimes|required|string|max:255',
             'translated_word' => 'sometimes|required|string|max:255',
+            'explanation' => 'sometimes|nullable|string',
             'word_type_id' => 'sometimes|required|integer|exists:word_type,id',
         ];
     }
@@ -50,6 +51,7 @@ class UpdateFlashcardRequest extends FormRequest
         return [
             'original_word' => __('validation.attributes.flashcard.original_word'),
             'translated_word' => __('validation.attributes.flashcard.translated_word'),
+            'explanation' => __('validation.attributes.flashcard.explanation'),
             'word_type_id' => __('validation.attributes.flashcard.word_type_id'),
         ];
     }

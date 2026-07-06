@@ -26,6 +26,7 @@ class FlashcardService
             $where['orWhere'] = [
                 'original_word' => ['original_word', 'like', '%' . $search . '%'],
                 'translated_word' => ['translated_word', 'like', '%' . $search . '%'],
+                'explanation' => ['explanation', 'like', '%' . $search . '%'],
             ];
         }
 
@@ -44,6 +45,7 @@ class FlashcardService
             $where['orWhere'] = [
                 'original_word' => ['original_word', 'like', '%' . $search . '%'],
                 'translated_word' => ['translated_word', 'like', '%' . $search . '%'],
+                'explanation' => ['explanation', 'like', '%' . $search . '%'],
             ];
         }
 

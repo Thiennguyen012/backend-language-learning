@@ -49,10 +49,6 @@ class QuestionService
      */
     public function create($data)
     {
-        if (isset($data['question_data']) && is_array($data['question_data'])) {
-            $data['question_data'] = json_encode($data['question_data']);
-        }
-
         return $this->questionRepository->create($data)->load('questionType');
     }
 
@@ -61,10 +57,6 @@ class QuestionService
      */
     public function update($question, $data)
     {
-        if (isset($data['question_data']) && is_array($data['question_data'])) {
-            $data['question_data'] = json_encode($data['question_data']);
-        }
-
         return $this->questionRepository->edit($question, $data)->load('questionType');
     }
 

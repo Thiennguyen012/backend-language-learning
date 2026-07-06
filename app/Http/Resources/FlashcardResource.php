@@ -18,6 +18,7 @@ class FlashcardResource extends JsonResource
             'id' => $this->id,
             'original_word' => $this->original_word,
             'translated_word' => $this->translated_word,
+            'explanation' => $this->explanation,
             // 'word_type_id' => $this->word_type_id,
             'word_type' => $this->whenLoaded('wordType', function () {
                 return [

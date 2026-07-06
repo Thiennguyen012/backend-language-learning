@@ -28,6 +28,7 @@ return [
         'flashcard' => [
             'original_word' => 'Original word',
             'translated_word' => 'Translated word',
+            'explanation' => 'Explanation',
             'word_type_id' => 'Word type',
         ],
         'flashcard_collection' => [

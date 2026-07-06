@@ -14,6 +14,7 @@ return [
         'question' => 'Question',
         'original_word' => 'Original word',
         'translated_word' => 'Translated word',
+        'explanation' => 'Explanation',
         'word_type' => 'Word type',
         'collection_name' => 'Collection name',
         'description' => 'Description',

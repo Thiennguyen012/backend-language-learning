@@ -14,6 +14,7 @@ return [
         'question' => 'Câu hỏi',
         'original_word' => 'Từ gốc',
         'translated_word' => 'Bản dịch từ',
+        'explanation' => 'Giải thích',
         'word_type' => 'Loại từ',
         'collection_name' => 'Tên bộ',
         'description' => 'Mô tả',
@@ -47,5 +48,4 @@ return [
     'user_test_attempt' => [
         'ended' => 'Phiên làm bài đã kết thúc',
     ],
-
 ];

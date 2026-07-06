@@ -598,7 +598,11 @@ class UserTestAttemptController extends Controller
     private function isAnswerCorrect(Question $question, $userAnswer): bool
     {
         $type = strtolower((string) optional($question->questionType)->keyword);
-        $data = is_array($question->question_data) ? $question->question_data : [];
+        $data = $question->question_data;
+        if (is_string($data)) {
+            $data = json_decode($data, true) ?: [];
+        }
+        $data = is_array($data) ? $data : [];
 
         switch ($type) {
             case 'multiple_choice':
@@ -617,7 +621,11 @@ class UserTestAttemptController extends Controller
     private function normalizeUserAnswer(Question $question, $userAnswer)
     {
         $type = strtolower((string) optional($question->questionType)->keyword);
-        $data = is_array($question->question_data) ? $question->question_data : [];
+        $data = $question->question_data;
+        if (is_string($data)) {
+            $data = json_decode($data, true) ?: [];
+        }
+        $data = is_array($data) ? $data : [];
 
         switch ($type) {
             case 'multiple_choice':
@@ -757,12 +765,16 @@ class UserTestAttemptController extends Controller
         $map = [];
         foreach ($pairs as $pair) {
             if (is_array($pair) && isset($pair['left'], $pair['right'])) {
-                $map[(string) $pair['left']] = (string) $pair['right'];
+                $left = (string) $pair['left'];
+                $right = (string) $pair['right'];
+                $map[$left] = $right;
                 continue;
             }
 
             if (is_array($pair) && count($pair) === 2 && array_is_list($pair)) {
-                $map[(string) $pair[0]] = (string) $pair[1];
+                $left = (string) $pair[0];
+                $right = (string) $pair[1];
+                $map[$left] = $right;
                 continue;
             }
 
