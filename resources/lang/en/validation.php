@@ -20,6 +20,8 @@ return [
         'numeric' => ':attribute may not be greater than :max.',
         'string' => ':attribute may not be greater than :max characters.',
     ],
+    'unique' => ':attribute has already been taken.',
+    'confirmed' => ':attribute confirmation does not match.',
     'attributes' => [
         'flashcard_ids' => 'Flashcard list',
         'question_ids' => 'Question list',

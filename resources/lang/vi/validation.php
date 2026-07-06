@@ -20,6 +20,8 @@ return [
         'numeric' => ':attribute không được lớn hơn :max.',
         'string' => ':attribute không được vượt quá :max ky tu.',
     ],
+    'unique' => ':attribute đã được sử dụng.',
+    'confirmed' => ':attribute xác nhận không khớp.',
     'attributes' => [
         'flashcard_ids' => 'Danh sách flashcard',
         'question_ids' => 'Danh sách câu hỏi',

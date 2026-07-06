@@ -2,13 +2,16 @@
 
 namespace App\Services\User;
 
+use App\Models\Role\Role;
 use App\Repositories\RefreshToken\RefreshTokenInterface;
 use App\Repositories\User\UserInterface;
 use Carbon\Carbon;
 use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
+use RuntimeException;
 
 class UserAuthService
 {
@@ -58,6 +61,28 @@ class UserAuthService
             'access_token_expires_in' => self::ACCESS_TOKEN_EXPIRATION * 60,
             'refresh_token_expires_in' => self::REFRESH_TOKEN_EXPIRATION * 24 * 60 * 60,
         ];
+    }
+
+    public function register(array $data)
+    {
+        $basicUserRoleId = Role::getBasicUserRoleID();
+
+        if (!$basicUserRoleId) {
+            throw new RuntimeException('Basic user role does not exist. Run RoleSeeder first.');
+        }
+
+        unset($data['password_confirmation']);
+
+        $data['password'] = Hash::make($data['password']);
+        $data['status'] = 1;
+        $data['is_super_admin'] = false;
+
+        return DB::transaction(function () use ($data, $basicUserRoleId) {
+            $user = $this->userRepository->create($data);
+            $user->roles()->sync([$basicUserRoleId]);
+
+            return $user->load('roles');
+        });
     }
 
     public function refresh(string $refreshTokenString)

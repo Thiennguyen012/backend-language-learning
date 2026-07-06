@@ -3,7 +3,9 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Auth\RegisterRequest;
 use App\Http\Requests\Auth\UpdateProfileRequest;
+use App\Http\Resources\UserResource;
 use App\Services\User\UserAuthService;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -44,6 +46,17 @@ class AuthController extends Controller
                 'refresh_token_expires_in' => $result['refresh_token_expires_in'],
             ]
         ]);
+    }
+
+    public function register(RegisterRequest $request)
+    {
+        $user = $this->authService->register($request->validated());
+
+        return response()->json([
+            'status_code' => Response::HTTP_CREATED,
+            'message' => __('messages.common.created', ['entity' => __('messages.entities.user')]),
+            'data' => new UserResource($user),
+        ], Response::HTTP_CREATED);
     }
 
     public function refresh(Request $request)
