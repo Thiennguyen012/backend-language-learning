@@ -13,6 +13,7 @@ use App\Http\Controllers\Api\TestType\TestTypeController;
 use App\Http\Controllers\Api\Question\QuestionController;
 use App\Http\Controllers\Api\QuestionType\QuestionTypeController;
 use App\Http\Controllers\Api\WordType\WordTypeController;
+use App\Http\Controllers\Api\SpeakingAssessment\SpeakingAssessmentController;
 use Illuminate\Support\Facades\Route;
 
 // Test CORS endpoint
@@ -41,6 +42,12 @@ Route::prefix('admin')->group(function () {
 
     Route::middleware('auth:sanctum')->group(function () {
         Route::get('/my-attempts', [UserTestAttemptController::class, 'myAttempts'])->middleware('permission:attempt.history');
+        Route::prefix('speaking-assessments')->middleware(['permission:attempt.do', 'throttle:5,1'])->group(function () {
+            Route::post('/', [SpeakingAssessmentController::class, 'store']);
+            Route::get('/{uuid}/audio', [SpeakingAssessmentController::class, 'audio'])->name('speaking-assessments.audio');
+            Route::get('/{uuid}', [SpeakingAssessmentController::class, 'show']);
+            Route::delete('/{uuid}', [SpeakingAssessmentController::class, 'destroy']);
+        });
         Route::get('/word-types', [WordTypeController::class, 'index']);
         Route::get('/question-types', [QuestionTypeController::class, 'index']);
 

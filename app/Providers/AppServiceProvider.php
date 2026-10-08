@@ -2,30 +2,33 @@
 
 namespace App\Providers;
 
-use App\Repositories\User\UserInterface;
-use App\Repositories\User\UserRepository;
-use App\Repositories\RefreshToken\RefreshTokenInterface;
-use App\Repositories\RefreshToken\RefreshTokenRepository;
-use App\Repositories\Order\OrderInterface;
-use App\Repositories\Order\OrderRepository;
+use App\Repositories\CollectionTest\CollectionTestInterface;
+use App\Repositories\CollectionTest\CollectionTestRepository;
 use App\Repositories\CustomerOrder\CustomerOrderInterface;
 use App\Repositories\CustomerOrder\CustomerOrderRepository;
 use App\Repositories\Flashcard\FlashcardInterface;
 use App\Repositories\Flashcard\FlashcardRepository;
 use App\Repositories\FlashcardCollection\FlashcardCollectionInterface;
 use App\Repositories\FlashcardCollection\FlashcardCollectionRepository;
-use App\Repositories\CollectionTest\CollectionTestInterface;
-use App\Repositories\CollectionTest\CollectionTestRepository;
-use App\Repositories\TestType\TestTypeInterface;
-use App\Repositories\TestType\TestTypeRepository;
+use App\Repositories\Order\OrderInterface;
+use App\Repositories\Order\OrderRepository;
 use App\Repositories\Question\QuestionInterface;
 use App\Repositories\Question\QuestionRepository;
-use App\Repositories\UserTestAttempt\UserTestAttemptInterface;
-use App\Repositories\UserTestAttempt\UserTestAttemptRepository;
+use App\Repositories\RefreshToken\RefreshTokenInterface;
+use App\Repositories\RefreshToken\RefreshTokenRepository;
+use App\Repositories\TestType\TestTypeInterface;
+use App\Repositories\TestType\TestTypeRepository;
+use App\Repositories\User\UserInterface;
+use App\Repositories\User\UserRepository;
 use App\Repositories\UserTestAnswer\UserTestAnswerInterface;
 use App\Repositories\UserTestAnswer\UserTestAnswerRepository;
-use App\Services\Order\OrderService;
+use App\Repositories\UserTestAttempt\UserTestAttemptInterface;
+use App\Repositories\UserTestAttempt\UserTestAttemptRepository;
 use App\Services\CustomerOrderService\CustomerOrderService;
+use App\Services\Order\OrderService;
+use App\Services\SpeakingAssessment\OpenPronounceClient;
+use App\Services\SpeakingAssessment\PronunciationScorer;
+use App\Services\SpeakingAssessment\SpeechaceClient;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -46,6 +49,12 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind(QuestionInterface::class, QuestionRepository::class);
         $this->app->bind(UserTestAttemptInterface::class, UserTestAttemptRepository::class);
         $this->app->bind(UserTestAnswerInterface::class, UserTestAnswerRepository::class);
+
+        $this->app->bind(PronunciationScorer::class, function ($app) {
+            return config('services.speaking_assessment.provider') === 'openpronounce'
+                ? $app->make(OpenPronounceClient::class)
+                : $app->make(SpeechaceClient::class);
+        });
 
         // Service bindings
         $this->app->bind(CustomerOrderService::class, function ($app) {

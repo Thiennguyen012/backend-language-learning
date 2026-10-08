@@ -18,6 +18,23 @@ return [
         'key' => env('POSTMARK_API_KEY'),
     ],
 
+    'speechace' => [
+        'api_key' => env('SPEECHACE_API_KEY'),
+        'base_url' => env('SPEECHACE_BASE_URL', 'https://api2.speechace.com'),
+        'include_fluency' => env('SPEECHACE_INCLUDE_FLUENCY', false),
+        'storage_disk' => env('SPEAKING_AUDIO_DISK', 'local'),
+    ],
+
+    'speaking_assessment' => [
+        'provider' => env('SPEAKING_ASSESSMENT_PROVIDER', 'speechace'),
+        'storage_disk' => env('SPEAKING_AUDIO_DISK', 'local'),
+    ],
+
+    'openpronounce' => [
+        'url' => env('OPENPRONOUNCE_URL'),
+        'timeout' => env('OPENPRONOUNCE_TIMEOUT', 600),
+    ],
+
     'resend' => [
         'key' => env('RESEND_API_KEY'),
     ],
