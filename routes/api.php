@@ -1,19 +1,20 @@
 <?php
 
 use App\Http\Controllers\Api\AuthController;
-use App\Http\Controllers\Api\Permission\PermissionController;
-use App\Http\Controllers\Api\Role\RoleController;
-use App\Http\Controllers\Api\User\UserController;
+use App\Http\Controllers\Api\CollectionTest\CollectionTestController;
 use App\Http\Controllers\Api\Flashcard\FlashcardController;
 use App\Http\Controllers\Api\FlashcardCollection\FlashcardCollectionController;
-use App\Http\Controllers\Api\CollectionTest\CollectionTestController;
-use App\Http\Controllers\Api\UserTestAttempt\UserTestAttemptController;
-use App\Http\Controllers\Api\UserTestAnswer\UserTestAnswerController;
-use App\Http\Controllers\Api\TestType\TestTypeController;
+use App\Http\Controllers\Api\Permission\PermissionController;
 use App\Http\Controllers\Api\Question\QuestionController;
 use App\Http\Controllers\Api\QuestionType\QuestionTypeController;
-use App\Http\Controllers\Api\WordType\WordTypeController;
+use App\Http\Controllers\Api\Role\RoleController;
 use App\Http\Controllers\Api\SpeakingAssessment\SpeakingAssessmentController;
+use App\Http\Controllers\Api\SpeakingAssessment\SpeakingLevelAssessmentController;
+use App\Http\Controllers\Api\TestType\TestTypeController;
+use App\Http\Controllers\Api\User\UserController;
+use App\Http\Controllers\Api\UserTestAnswer\UserTestAnswerController;
+use App\Http\Controllers\Api\UserTestAttempt\UserTestAttemptController;
+use App\Http\Controllers\Api\WordType\WordTypeController;
 use Illuminate\Support\Facades\Route;
 
 // Test CORS endpoint
@@ -47,6 +48,13 @@ Route::prefix('admin')->group(function () {
             Route::get('/{uuid}/audio', [SpeakingAssessmentController::class, 'audio'])->name('speaking-assessments.audio');
             Route::get('/{uuid}', [SpeakingAssessmentController::class, 'show']);
             Route::delete('/{uuid}', [SpeakingAssessmentController::class, 'destroy']);
+        });
+        Route::prefix('speaking-level-assessments')->middleware(['permission:attempt.do', 'throttle:10,1'])->group(function () {
+            Route::get('/topics', [SpeakingLevelAssessmentController::class, 'topics']);
+            Route::post('/', [SpeakingLevelAssessmentController::class, 'store']);
+            Route::post('/{uuid}/answer', [SpeakingLevelAssessmentController::class, 'submitAnswer']);
+            Route::get('/{uuid}', [SpeakingLevelAssessmentController::class, 'show']);
+            Route::delete('/{uuid}', [SpeakingLevelAssessmentController::class, 'destroy']);
         });
         Route::get('/word-types', [WordTypeController::class, 'index']);
         Route::get('/question-types', [QuestionTypeController::class, 'index']);

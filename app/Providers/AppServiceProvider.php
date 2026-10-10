@@ -27,7 +27,9 @@ use App\Repositories\UserTestAttempt\UserTestAttemptRepository;
 use App\Services\CustomerOrderService\CustomerOrderService;
 use App\Services\Order\OrderService;
 use App\Services\SpeakingAssessment\OpenPronounceClient;
+use App\Services\SpeakingAssessment\OpenSpeakingLevelEvaluatorClient;
 use App\Services\SpeakingAssessment\PronunciationScorer;
+use App\Services\SpeakingAssessment\SpeakingLevelEvaluator;
 use App\Services\SpeakingAssessment\SpeechaceClient;
 use Illuminate\Support\ServiceProvider;
 
@@ -55,6 +57,8 @@ class AppServiceProvider extends ServiceProvider
                 ? $app->make(OpenPronounceClient::class)
                 : $app->make(SpeechaceClient::class);
         });
+
+        $this->app->bind(SpeakingLevelEvaluator::class, OpenSpeakingLevelEvaluatorClient::class);
 
         // Service bindings
         $this->app->bind(CustomerOrderService::class, function ($app) {
